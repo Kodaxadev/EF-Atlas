@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Tuple
 
 from .config import LAYER2_REPOS, RepoSpec
 from .records import authority_flags, sha256_hex, utc_now_iso
+from .markdown import parse_frontmatter, extract_title, extract_headings, strip_markdown, extract_outlinks
 
 
 def run_git(args: List[str], *, cwd: Path) -> None:
@@ -178,6 +179,22 @@ def scrape_layer2_repos(*, repos_dir: Path) -> Tuple[List[Dict[str, Any]], Dict[
                         "raw_markdown": raw,
                         "text": raw,
                     }
+                    # Parse markdown for .md/.mdx files to populate frontmatter/headings/title/text
+                    if ext in {".md", ".mdx"}:
+                        try:
+                            fm, rest = parse_frontmatter(raw)
+                            title = fm.get("title") or extract_title(rest) or rec["title"]
+                            headings = extract_headings(rest)
+                            text = strip_markdown(rest)
+                            outlinks = extract_outlinks(raw, page_url=rec["url"]) if raw else []
+                            rec["frontmatter"] = fm
+                            rec["headings"] = headings
+                            rec["title"] = title
+                            rec["text"] = text
+                            rec["outlinks"] = outlinks
+                        except Exception:
+                            # keep fallback values on parse errors
+                            pass
                     records.append(rec)
                     count += 1
                 except Exception as e:  # noqa: BLE001
