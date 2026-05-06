@@ -40,7 +40,23 @@ def parse_frontmatter(markdown: str) -> Tuple[Dict[str, Any], str]:
     fm_text = "\n".join(fm_lines).strip()
     if not fm_text:
         return {}, rest
+    # Try to parse full YAML frontmatter if PyYAML is available.
+    try:
+        import yaml  # type: ignore
 
+        try:
+            data = yaml.safe_load(fm_text)
+            if isinstance(data, dict):
+                return data, rest
+            # if YAML parsed but not a dict, fall back to simple parsing below
+        except Exception:
+            # fall through to simple parsing
+            pass
+    except Exception:
+        # PyYAML not installed; fall back to simple parsing
+        pass
+
+    # Simple conservative parser: key: value lines only
     fm: Dict[str, Any] = {}
     raw_fallback: List[str] = []
     for ln in fm_lines:
