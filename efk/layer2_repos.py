@@ -92,10 +92,15 @@ def safe_read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
 
-def infer_repo_categories(rel_path: str, default_categories: Tuple[str, ...]) -> List[str]:
+def infer_repo_categories(rel_path: str, default_categories: Tuple[str, ...], raw_text: str = "") -> List[str]:
+    """
+    Infer categories from the repo relative path and optional raw text content.
+    Adds keyword-based boosts while preserving existing path-based heuristics.
+    """
     p = rel_path.replace("\\", "/").lower()
     cats = set(default_categories)
 
+    # path-based heuristics (existing behavior)
     if "package" in p or "pnpm-lock" in p or "package-lock" in p or "cargo.lock" in p:
         cats.add("package-versioning")
     if "dapp" in p:
@@ -112,6 +117,46 @@ def infer_repo_categories(rel_path: str, default_categories: Tuple[str, ...]) ->
         cats.add("indexing")
     if "tool" in p or "cli" in p:
         cats.add("tooling")
+
+    # keyword-based boosts applied to both path and content (conservative matches)
+    text = (p + " " + (raw_text or "")).lower()
+
+    boosts = {
+        "smart-gates": [
+            "authorize_extension",
+            "gatelinkedevent",
+            "gateunlinkedevent",
+            "jumpevent",
+            "jumppermit",
+            "gate.move",
+            "gate",
+        ],
+        "identity": ["playerprofile", "character", "ownercap", "character_id", "tribe_id"],
+        "package-versioning": [
+            "published-at",
+            "original-id",
+            "upgradecap",
+            "move.lock",
+            "mvr",
+            "move registry",
+            "package lineage",
+        ],
+        "discovery": ["walrus", "registry", "metadata hash", "slug", "approval", "smartassemblytypes"],
+        "wallet": [
+            "eve vault",
+            "dapp kit",
+            "smartobjectprovider",
+            "sponsored transaction",
+            "zklogin",
+        ],
+        "tooling": ["efctl", "builder-scaffold", "setup-world", "ts-scripts"],
+    }
+
+    for cat, keys in boosts.items():
+        for k in keys:
+            if k and k in text:
+                cats.add(cat)
+                break
 
     return sorted(cats)
 
@@ -153,7 +198,7 @@ def scrape_layer2_repos(*, repos_dir: Path) -> Tuple[List[Dict[str, Any]], Dict[
                 try:
                     raw = safe_read_text(path)
                     content_hash = sha256_hex(raw.encode("utf-8"))
-                    cats = infer_repo_categories(rel, repo.default_source_categories)
+                    cats = infer_repo_categories(rel, repo.default_source_categories, raw)
                     ext = path.suffix.lower()
 
                     rec = {
