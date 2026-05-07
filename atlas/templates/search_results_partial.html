@@ -1,0 +1,25 @@
+{% if total == 0 %}
+<p style="color: var(--text-dim);">No results found.</p>
+{% else %}
+<p style="color: var(--text-dim); font-size: 12px; margin-bottom: 8px;">{{ total }} results</p>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Authority</th>
+        <th>Source</th>
+        <th>Hash</th>
+    </tr>
+    {% for r in results %}
+    <tr>
+        <td><a href="/r/{{ r.id }}">{{ r.title or r.id[:40] }}</a></td>
+        <td>
+            {% if r.authority_tier %}
+            <span class="badge" style="background:{{ authority_colors.get(r.authority_tier, '#9E9E9E') }}">{{ r.authority_tier }}</span>
+            {% endif %}
+        </td>
+        <td style="font-size:12px;color:var(--text-dim)">{{ r.source }}</td>
+        <td style="font-size:11px;color:var(--text-dim);font-family:monospace">{{ r.content_sha256[:8] if r.content_sha256 else '-' }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}

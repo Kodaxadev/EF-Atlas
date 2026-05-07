@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EF Builder Knowledge Atlas{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg2: #141414;
+            --bg3: #1e1e1e;
+            --text: #e0d5c1;
+            --text-dim: #8a8070;
+            --amber: #FFB800;
+            --amber-dim: #997000;
+            --border: #2a2a2a;
+            --green: #4CAF50;
+            --blue: #2196F3;
+            --orange: #FF9800;
+            --purple: #9C27B0;
+            --gray: #9E9E9E;
+            --red: #f44336;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        a { color: var(--amber); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Nav */
+        nav {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        nav .logo { color: var(--amber); font-weight: bold; font-size: 15px; margin-right: 16px; }
+        nav a { color: var(--text-dim); font-size: 13px; padding: 4px 8px; }
+        nav a:hover, nav a.active { color: var(--amber); }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+        /* Cards */
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* Authority badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-dim); font-size: 12px; font-weight: normal; }
+        td { font-size: 13px; }
+        tr:hover td { background: var(--bg3); }
+
+        /* Search */
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .search-bar input, .search-bar select {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .search-bar input[type="text"] { flex: 1; min-width: 200px; }
+        .search-bar button {
+            background: var(--amber);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Code/pre */
+        pre {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            padding: 12px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .stat-card .value { font-size: 28px; color: var(--amber); font-weight: bold; }
+        .stat-card .label { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+        /* Sections */
+        h1 { color: var(--amber); font-size: 20px; margin-bottom: 16px; }
+        h2 { color: var(--amber); font-size: 16px; margin: 20px 0 12px; }
+        h3 { color: var(--text); font-size: 14px; margin: 12px 0 8px; }
+
+        /* Truncated text */
+        .text-preview {
+            max-height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        .text-preview.expanded { max-height: none; }
+    </style>
+</head>
+<body>
+<nav>
+    <span class="logo">EF Atlas</span>
+    <a href="/" class="{{ 'active' if request.url.path == '/' else '' }}">Dashboard</a>
+    <a href="/search" class="{{ 'active' if request.url.path.startswith('/search') else '' }}">Search</a>
+    <a href="/t/smart-gates">Smart Gates</a>
+    <a href="/t/package-versioning">Package Ver</a>
+    <a href="/t/identity">Identity</a>
+    <a href="/t/dapp-discovery">dApp Discovery</a>
+    <a href="/t/tooling">Tooling</a>
+    <a href="/t/game-files">Game Files</a>
+    <a href="/diff">Diff</a>
+    <a href="/ai">AI</a>
+</nav>
+<div class="container">
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>

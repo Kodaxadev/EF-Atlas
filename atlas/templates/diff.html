@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Diff — EF Atlas{% endblock %}
+{% block content %}
+<h1>Corpus Diff</h1>
+
+{% if not diff %}
+<p style="color: var(--text-dim);">No diff data available. Run a corpus diff first.</p>
+<p style="color: var(--text-dim); font-size: 12px;">Generate with: <code>python ef_diff_corpus.py old.jsonl new.jsonl</code></p>
+{% else %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="value" style="color:var(--green)">{{ diff.counts.added }}</div><div class="label">Added</div></div>
+    <div class="stat-card"><div class="value" style="color:var(--red)">{{ diff.counts.removed }}</div><div class="label">Removed</div></div>
+    <div class="stat-card"><div class="value" style="color:var(--amber)">{{ diff.counts.changed }}</div><div class="label">Changed</div></div>
+    <div class="stat-card"><div class="value">{{ diff.counts.unchanged }}</div><div class="label">Unchanged</div></div>
+</div>
+
+{% if diff.changed_records %}
+<h2>Changed Records</h2>
+{% for c in diff.changed_records %}
+<div class="card">
+    <h3>{{ c.title or 'Untitled' }}</h3>
+    <table>
+        <tr><th style="width:140px">URL</th><td style="font-family:monospace;font-size:12px"><a href="{{ c.url }}">{{ c.url }}</a></td></tr>
+        <tr><th>Authority</th><td><span class="badge" style="background:{{ authority_colors.get(c.authority_tier, '#9E9E9E') }}">{{ c.authority_tier }}</span></td></tr>
+        <tr><th>Source</th><td>{{ c.source }}</td></tr>
+        <tr><th>Old Hash</th><td style="font-family:monospace;font-size:12px">{{ c.old_hash }}</td></tr>
+        <tr><th>New Hash</th><td style="font-family:monospace;font-size:12px">{{ c.new_hash }}</td></tr>
+        {% if c.old_source_commit or c.new_source_commit %}
+        <tr><th>Commit Change</th><td style="font-family:monospace;font-size:12px">{{ c.old_source_commit[:8] if c.old_source_commit else '-' }} → {{ c.new_source_commit[:8] if c.new_source_commit else '-' }}</td></tr>
+        {% endif %}
+    </table>
+</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endblock %}

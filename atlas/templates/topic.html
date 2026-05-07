@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ topic.label }} — EF Atlas{% endblock %}
+{% block content %}
+<h1>{{ topic.label }}</h1>
+
+{% for tier, records in by_tier.items() %}
+<h2>
+    <span class="badge" style="background:{{ authority_colors.get(tier, '#9E9E9E') }}">{{ tier }}</span>
+    ({{ records|length }})
+</h2>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Path</th>
+        <th>URL</th>
+        <th>Hash</th>
+    </tr>
+    {% for r in records %}
+    <tr>
+        <td><a href="/r/{{ r.id }}">{{ r.title or r.id[:40] }}</a></td>
+        <td style="font-size:12px;color:var(--text-dim);font-family:monospace">{{ r.path[:60] if r.path else '-' }}</td>
+        <td style="font-size:12px;color:var(--text-dim);font-family:monospace">{{ r.url[:60] if r.url else '-' }}</td>
+        <td style="font-size:11px;color:var(--text-dim);font-family:monospace">{{ r.content_sha256[:8] if r.content_sha256 else '-' }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+
+{% if not by_tier %}
+<p style="color: var(--text-dim);">No records found for this topic.</p>
+{% endif %}
+{% endblock %}

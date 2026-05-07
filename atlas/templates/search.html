@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Search — EF Atlas{% endblock %}
+{% block content %}
+<h1>Search</h1>
+
+<form hx-get="/search/partial" hx-target="#results" hx-trigger="submit, changed from:body delay:300ms" style="margin-bottom:16px;">
+    <div class="search-bar">
+        <input type="text" name="q" value="{{ q }}" placeholder="Search corpus..." style="flex:1;min-width:200px;">
+        <select name="authority">
+            <option value="">All Authorities</option>
+            <option value="authoritative_source" {% if authority == 'authoritative_source' %}selected{% endif %}>Authoritative Source</option>
+            <option value="official_docs" {% if authority == 'official_docs' %}selected{% endif %}>Official Docs</option>
+            <option value="official_tooling" {% if authority == 'official_tooling' %}selected{% endif %}>Official Tooling</option>
+            <option value="installed_client_observation" {% if authority == 'installed_client_observation' %}selected{% endif %}>Installed Client</option>
+            <option value="community_reference" {% if authority == 'community_reference' %}selected{% endif %}>Community</option>
+        </select>
+        <select name="source">
+            <option value="">All Sources</option>
+            <option value="docs" {% if source == 'docs' %}selected{% endif %}>Docs</option>
+            <option value="whitepaper" {% if source == 'whitepaper' %}selected{% endif %}>Whitepaper</option>
+            <option value="repo" {% if source == 'repo' %}selected{% endif %}>Repo</option>
+            <option value="game_files" {% if source == 'game_files' %}selected{% endif %}>Game Files</option>
+        </select>
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+<div id="results">
+{% include "search_results_partial.html" %}
+</div>
+{% endblock %}

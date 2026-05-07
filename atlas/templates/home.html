@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}EF Builder Knowledge Atlas — Dashboard{% endblock %}
+{% block content %}
+<h1>EF Builder Knowledge Atlas</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">{{ total_records }}</div>
+        <div class="label">Total Records</div>
+    </div>
+    {% for tier, count in by_authority.items() %}
+    <div class="stat-card" style="border-color: {{ authority_colors.get(tier, '#9E9E9E') }}33">
+        <div class="value" style="color: {{ authority_colors.get(tier, '#9E9E9E') }}">{{ count }}</div>
+        <div class="label">{{ tier }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>By Source</h2>
+<div class="stats-grid">
+    {% for src, count in by_source.items() %}
+    <div class="stat-card">
+        <div class="value">{{ count }}</div>
+        <div class="label">{{ src }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>Topics</h2>
+<div class="card">
+    <table>
+        <tr>
+            <th>Topic</th>
+            <th>Link</th>
+        </tr>
+        <tr><td>Smart Gates</td><td><a href="/t/smart-gates">/t/smart-gates</a></td></tr>
+        <tr><td>Package Versioning</td><td><a href="/t/package-versioning">/t/package-versioning</a></td></tr>
+        <tr><td>Identity</td><td><a href="/t/identity">/t/identity</a></td></tr>
+        <tr><td>dApp Discovery</td><td><a href="/t/dapp-discovery">/t/dapp-discovery</a></td></tr>
+        <tr><td>Tooling</td><td><a href="/t/tooling">/t/tooling</a></td></tr>
+        <tr><td>Game Files</td><td><a href="/t/game-files">/t/game-files</a></td></tr>
+    </table>
+</div>
+
+<h2>Quick Search</h2>
+<div class="search-bar">
+    <form action="/search" method="get" style="display:flex;gap:8px;width:100%;flex-wrap:wrap;">
+        <input type="text" name="q" placeholder="Search corpus..." style="flex:1;min-width:200px;">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+{% if last_build %}
+<p style="color: var(--text-dim); font-size: 12px; margin-top: 16px;">Last build: {{ last_build }}</p>
+{% endif %}
+
+<p style="color: var(--text-dim); font-size: 12px; margin-top: 8px;">
+    AI agents: <a href="/llms.txt">/llms.txt</a> | <a href="/api/corpus-summary">/api/corpus-summary</a>
+</p>
+{% endblock %}

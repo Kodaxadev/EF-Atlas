@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}AI Ingest — EF Atlas{% endblock %}
+{% block content %}
+<h1>AI Ingestion</h1>
+
+<div class="card">
+    <h2>Start Here</h2>
+    <ul>
+        <li><a href="/llms.txt">/llms.txt</a> — Plain-text agent start file</li>
+        <li><a href="/api/corpus-summary">/api/corpus-summary</a> — JSON corpus overview</li>
+        <li><a href="/api/search?q=smart+gates">/api/search?q=...</a> — JSON search</li>
+        <li><a href="/api/topics/smart-gates">/api/topics/{topic}</a> — Topic context bundles</li>
+        <li><a href="/api/records/{id}">/api/records/{id}</a> — Single record JSON</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Authority Order</h2>
+    <ol>
+        <li><span class="badge" style="background:#FFB800">authoritative_source</span></li>
+        <li><span class="badge" style="background:#4CAF50">official_docs</span></li>
+        <li><span class="badge" style="background:#2196F3">official_tooling</span></li>
+        <li><span class="badge" style="background:#FF9800">installed_client_observation</span></li>
+        <li><span class="badge" style="background:#9C27B0">community_reference</span></li>
+        <li><span class="badge" style="background:#9E9E9E">unofficial</span></li>
+    </ol>
+</div>
+
+<div class="card">
+    <h2>Rules for AI Agents</h2>
+    <pre>
+Use this corpus as upstream EVE Frontier source material.
+Respect authority_tier — higher tiers override lower tiers.
+Do not treat community references as authoritative.
+Do not make downstream project recommendations unless given project context.
+Treat indexes as navigation, not conclusions.
+Inspect records before making claims.
+Cite record URLs and content hashes.
+    </pre>
+</div>
+
+<div class="card">
+    <h2>Endpoints</h2>
+    <table>
+        <tr><th>Endpoint</th><th>Format</th><th>Description</th></tr>
+        <tr><td><code>/api/corpus-summary</code></td><td>JSON</td><td>Corpus overview</td></tr>
+        <tr><td><code>/api/search?q=&authority=&category=</code></td><td>JSON</td><td>Search with filters</td></tr>
+        <tr><td><code>/api/records/{id}</code></td><td>JSON</td><td>Single record</td></tr>
+        <tr><td><code>/api/topics/{topic}</code></td><td>JSON</td><td>Topic context bundle</td></tr>
+        <tr><td><code>/llms.txt</code></td><td>Plain text</td><td>Agent start file</td></tr>
+    </table>
+</div>
+{% endblock %}

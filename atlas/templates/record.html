@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ rec.title or rec.id[:40] }} — EF Atlas{% endblock %}
+{% block content %}
+<h1>{{ rec.title or rec.id[:40] }}</h1>
+
+<div class="card">
+    <table>
+        <tr><th style="width:160px">ID</th><td style="font-family:monospace;font-size:12px">{{ rec.id }}</td></tr>
+        <tr><th>Authority</th><td><span class="badge" style="background:{{ authority_colors.get(rec.authority_tier, '#9E9E9E') }}">{{ rec.authority_tier }}</span></td></tr>
+        <tr><th>Source</th><td>{{ rec.source }}</td></tr>
+        <tr><th>URL</th><td style="font-family:monospace;font-size:12px"><a href="{{ rec.url }}">{{ rec.url }}</a></td></tr>
+        <tr><th>Path</th><td style="font-family:monospace;font-size:12px">{{ rec.path }}</td></tr>
+        <tr><th>Content SHA256</th><td style="font-family:monospace;font-size:12px">{{ rec.content_sha256 }}</td></tr>
+        <tr><th>Retrieved</th><td>{{ rec.retrieved_at }}</td></tr>
+        {% if rec.source_repo %}<tr><th>Source Repo</th><td>{{ rec.source_repo }}</td></tr>{% endif %}
+        {% if rec.source_commit %}<tr><th>Source Commit</th><td style="font-family:monospace;font-size:12px">{{ rec.source_commit[:8] }}</td></tr>{% endif %}
+        {% if rec.source_ref %}<tr><th>Source Ref</th><td>{{ rec.source_ref }}</td></tr>{% endif %}
+        {% if rec.file_extension %}<tr><th>Extension</th><td>{{ rec.file_extension }}</td></tr>{% endif %}
+        {% if rec.size_bytes %}<tr><th>Size</th><td>{{ rec.size_bytes }} bytes</td></tr>{% endif %}
+    </table>
+</div>
+
+{% if rec.categories %}
+<h2>Categories</h2>
+<div class="card">
+    {% for cat in rec.categories %}
+    <span class="badge" style="background:var(--amber-dim);margin-right:4px">{{ cat }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if rec.headings %}
+<h2>Headings</h2>
+<div class="card">
+    {% for h in rec.headings %}
+    <div style="padding-left:{{ (h.level - 1) * 16 }}px">{{ '#' * h.level }} {{ h.text }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if rec.outlinks %}
+<h2>Outlinks ({{ rec.outlinks|length }})</h2>
+<div class="card">
+    {% for u in rec.outlinks[:20] %}
+    <div style="font-size:12px;font-family:monospace"><a href="{{ u }}">{{ u }}</a></div>
+    {% endfor %}
+    {% if rec.outlinks|length > 20 %}
+    <div style="color:var(--text-dim);font-size:12px">... and {{ rec.outlinks|length - 20 }} more</div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if rec.related %}
+<h2>Related Records</h2>
+<div class="card">
+    <table>
+        <tr><th>Title</th><th>Authority</th><th>Source</th></tr>
+        {% for r in rec.related %}
+        <tr>
+            <td><a href="/r/{{ r.id }}">{{ r.title or r.id[:40] }}</a></td>
+            <td><span class="badge" style="background:{{ authority_colors.get(r.authority_tier, '#9E9E9E') }}">{{ r.authority_tier }}</span></td>
+            <td>{{ r.source }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+{% if rec.text %}
+<h2>Text Preview</h2>
+<div class="card">
+    <pre>{{ rec.text[:3000] }}{% if rec.text|length > 3000 %}... (truncated){% endif %}</pre>
+</div>
+{% endif %}
+{% endblock %}
