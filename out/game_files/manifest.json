@@ -1,0 +1,55 @@
+{
+  "started_at": "2026-05-07T16:39:39.293056+00:00",
+  "ended_at": "2026-05-07T16:39:40.327029+00:00",
+  "inventory": {
+    "layer": "layer3_game_files",
+    "game_dir": "D:\\EVE Frontier",
+    "total_files_scanned": 245,
+    "inventory_count": 15,
+    "skipped_count": 230,
+    "sensitive_candidates_count": 0,
+    "by_category": {
+      "data": 9,
+      "config": 2,
+      "unknown": 3,
+      "asset": 1
+    },
+    "by_extension": {
+      ".txt": 4,
+      ".json": 2,
+      ".pem": 2,
+      "": 2,
+      ".mmdb": 2,
+      ".ini": 1,
+      ".demo": 1,
+      ".db": 1
+    }
+  },
+  "text_extraction": {
+    "layer": "layer3_game_files_text",
+    "text_files_extracted": 5,
+    "world_records_derived": 0,
+    "by_category": {
+      "localization": 1,
+      "config": 2,
+      "data": 1,
+      "asset": 1
+    }
+  },
+  "combined_counts": {
+    "by_source": {
+      "game_files_inventory": 15,
+      "game_files_corpus": 5,
+      "game_files_world_records": 0
+    },
+    "by_category": {
+      "localization": 1,
+      "config": 2,
+      "data": 1,
+      "asset": 1
+    },
+    "by_authority_tier": {
+      "installed_client_observation": 5
+    }
+  }
+}
