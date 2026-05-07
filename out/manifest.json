@@ -1,0 +1,116 @@
+{
+  "started_at": "2026-05-07T16:19:46.215750+00:00",
+  "ended_at": "2026-05-07T16:20:34.909171+00:00",
+  "records_written": 704,
+  "failures": 0,
+  "requested_urls_count": 63,
+  "requested_urls_sample": [
+    "https://docs.evefrontier.com/sitemap.md",
+    "https://whitepaper.evefrontier.com/sitemap.md",
+    "https://docs.evefrontier.com/welcome/readme.md",
+    "https://docs.evefrontier.com/welcome/smart-infrastructure.md",
+    "https://docs.evefrontier.com/welcome/sui-and-move-fundamentals.md",
+    "https://docs.evefrontier.com/quickstart/environment-setup.md",
+    "https://docs.evefrontier.com/smart-contracts/introduction-to-smart-contracts.md",
+    "https://docs.evefrontier.com/smart-contracts/eve-frontier-world-explainer.md",
+    "https://docs.evefrontier.com/smart-contracts/object-model.md",
+    "https://docs.evefrontier.com/smart-contracts/ownership-model.md",
+    "https://docs.evefrontier.com/smart-contracts/move-patterns-in-frontier.md",
+    "https://docs.evefrontier.com/smart-assemblies/introduction.md",
+    "https://docs.evefrontier.com/smart-assemblies/smart-character.md",
+    "https://docs.evefrontier.com/smart-assemblies/network-node.md",
+    "https://docs.evefrontier.com/smart-assemblies/storage-unit.md",
+    "https://docs.evefrontier.com/smart-assemblies/storage-unit/build.md",
+    "https://docs.evefrontier.com/smart-assemblies/turret.md",
+    "https://docs.evefrontier.com/smart-assemblies/turret/build.md",
+    "https://docs.evefrontier.com/smart-assemblies/gate.md",
+    "https://docs.evefrontier.com/smart-assemblies/gate/build.md",
+    "https://docs.evefrontier.com/dapps/dapps-quick-start.md",
+    "https://docs.evefrontier.com/dapps/connecting-from-an-external-browser.md",
+    "https://docs.evefrontier.com/dapps/connecting-in-game.md",
+    "https://docs.evefrontier.com/eve-vault/wallets-and-identity.md",
+    "https://docs.evefrontier.com/eve-vault/introduction-to-eve-vault.md",
+    "https://docs.evefrontier.com/eve-vault/wallet-game-setup.md",
+    "https://docs.evefrontier.com/eve-vault/browser-extension.md",
+    "https://docs.evefrontier.com/tools/interfacing-with-the-eve-frontier-world.md",
+    "https://docs.evefrontier.com/tools/world-upgrades.md",
+    "https://docs.evefrontier.com/tools/efctl.md",
+    "https://docs.evefrontier.com/tools/dapp-kit.md",
+    "https://docs.evefrontier.com/tools/resources.md",
+    "https://docs.evefrontier.com/troubleshooting/builder.md",
+    "https://docs.evefrontier.com/troubleshooting/player.md",
+    "https://docs.evefrontier.com/troubleshooting/wallet.md",
+    "https://docs.evefrontier.com/troubleshooting/sandbox-access.md",
+    "https://docs.evefrontier.com/contributing/a-work-in-progress.md",
+    "https://docs.evefrontier.com/contributing/contributing.md",
+    "https://whitepaper.evefrontier.com/eve-frontier.md",
+    "https://whitepaper.evefrontier.com/abstract.md",
+    "https://whitepaper.evefrontier.com/game.md",
+    "https://whitepaper.evefrontier.com/game/overview.md",
+    "https://whitepaper.evefrontier.com/game/game-pillars.md",
+    "https://whitepaper.evefrontier.com/game/tribes-and-syndicates.md",
+    "https://whitepaper.evefrontier.com/philosophy.md",
+    "https://whitepaper.evefrontier.com/philosophy/core-beliefs.md",
+    "https://whitepaper.evefrontier.com/philosophy/designing-an-enduring-virtual-world.md",
+    "https://whitepaper.evefrontier.com/physics.md",
+    "https://whitepaper.evefrontier.com/economy.md",
+    "https://whitepaper.evefrontier.com/economy/pillars-of-the-frontier-economy.md"
+  ],
+  "proof_no_ask_or_q_requested": {
+    "checked_at": "2026-05-07T16:20:34.909185+00:00",
+    "any_contains_ask": false,
+    "any_contains_q": false,
+    "any_contains_query_string": false
+  },
+  "counts": {
+    "by_source": {
+      "docs": 36,
+      "whitepaper": 25,
+      "repo": 643
+    },
+    "by_authority_tier": {
+      "official_docs": 75,
+      "authoritative_source": 182,
+      "official_tooling": 447
+    }
+  },
+  "layers": [
+    {
+      "layer": "layer1_docs_whitepaper",
+      "sitemap_counts": {
+        "docs": 36,
+        "whitepaper": 25
+      },
+      "sitemap_total_links_observed": {
+        "docs": 85,
+        "whitepaper": 25
+      },
+      "archive_exclusions": 49,
+      "noncanonical_exclusions": 0,
+      "blocked_query_urls_seen": [],
+      "per_host_counts": {
+        "docs.evefrontier.com": 36,
+        "whitepaper.evefrontier.com": 25
+      },
+      "records": 61
+    },
+    {
+      "layer": "layer2_repos",
+      "repos": [
+        "evefrontier/world-contracts",
+        "evefrontier/builder-documentation",
+        "evefrontier/builder-scaffold",
+        "evefrontier/evevault",
+        "evefrontier/dapp-index"
+      ],
+      "per_repo_counts": {
+        "evefrontier/world-contracts": 157,
+        "evefrontier/builder-documentation": 39,
+        "evefrontier/builder-scaffold": 71,
+        "evefrontier/evevault": 362,
+        "evefrontier/dapp-index": 14
+      },
+      "records": 643
+    }
+  ]
+}
