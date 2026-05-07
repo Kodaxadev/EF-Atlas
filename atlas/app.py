@@ -215,3 +215,26 @@ async def api_export_jsonl(q: str = Query(""), authority: str = Query(""), categ
             yield json.dumps(rec, ensure_ascii=False) + "\n"
 
     return StreamingResponse(stream(), media_type="application/x-jsonl")
+
+
+@app.get("/api/context/{topic_key}", response_class=JSONResponse)
+async def api_context_bundle(topic_key: str):
+    d = db.get_db()
+    bundle = db.get_context_bundle(d, topic_key)
+    d.close()
+    if not bundle:
+        return JSONResponse({"error": "topic not found"}, status_code=404)
+    return bundle
+
+
+@app.get("/api/context-list", response_class=JSONResponse)
+async def api_context_list():
+    topics = db.get_topics()
+    return {
+        "topics": [
+            {"key": k, "label": v["label"], "context_url": f"/api/context/{k}"}
+            for k, v in topics.items()
+        ],
+        "rules": db.CONTEXT_RULES,
+        "authority_order": db.AUTHORITY_ORDER,
+    }

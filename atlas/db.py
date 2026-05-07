@@ -243,3 +243,69 @@ AUTHORITY_COLORS = {
     "community_reference": "#9C27B0",
     "unofficial": "#9E9E9E",
 }
+
+AUTHORITY_ORDER = [
+    "authoritative_source",
+    "official_docs",
+    "official_tooling",
+    "installed_client_observation",
+    "community_reference",
+    "unofficial",
+]
+
+CONTEXT_RULES = [
+    "Indexes are navigation, not conclusions.",
+    "Inspect records before making claims.",
+    "Prefer authoritative_source over tooling or community references.",
+    "Cite record URLs and content_sha256 hashes when referencing facts.",
+    "Do not treat community references as authoritative.",
+    "Do not make downstream project recommendations unless given project context.",
+]
+
+
+def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[str, Any]]:
+    """Return a compact agent-consumable context bundle for a topic."""
+    topics = get_topics()
+    if topic_key not in topics:
+        return None
+
+    topic = topics[topic_key]
+    cats = topic["categories"]
+    placeholders = ",".join("?" for _ in cats)
+
+    # Get top records per authority tier (limit 5 per tier)
+    records_by_tier = get_topic_records(db, topic_key)
+    top_records = []
+    for tier in AUTHORITY_ORDER:
+        tier_records = records_by_tier.get(tier, [])
+        for rec in tier_records[:5]:
+            top_records.append({
+                "id": rec["id"],
+                "title": rec.get("title", ""),
+                "authority_tier": tier,
+                "source": rec.get("source", ""),
+                "url": rec.get("url", ""),
+                "content_sha256": rec.get("content_sha256", ""),
+                "path": rec.get("path", ""),
+            })
+
+    # Search suggestions: common keywords from category names + headings
+    headings_query = f"""
+        SELECT DISTINCT rh.text
+        FROM record_headings rh
+        JOIN record_categories rc ON rh.record_id = rc.record_id
+        WHERE rc.category IN ({placeholders})
+        LIMIT 10
+    """
+    headings = [r[0] for r in db.execute(headings_query, cats).fetchall()]
+
+    return {
+        "topic": topic_key,
+        "label": topic["label"],
+        "categories": cats,
+        "authority_order": AUTHORITY_ORDER,
+        "rules": CONTEXT_RULES,
+        "top_records": top_records,
+        "search_suggestions": [h for h in headings if h and len(h) > 3],
+        "export_url": f"/api/exports/jsonl?category={cats[0]}",
+    }
