@@ -2,7 +2,27 @@
 
 A searchable, authority-tiered knowledge base for EVE Frontier builders — corpus, web atlas, and API.
 
-**Live site:** [atlas.kodaxa.dev](https://atlas.kodaxa.dev)
+[![Live](https://img.shields.io/badge/live-atlas.kodaxa.dev-blue)](https://atlas.kodaxa.dev)
+[![Python 3.14](https://img.shields.io/badge/python-3.14-blue)](https://www.python.org/)
+[![Deployed on Railway](https://img.shields.io/badge/deployed%20on-railway-9333ea)](https://railway.app/)
+
+## Quickstart
+
+Get the full stack running locally in 5 commands:
+
+```bash
+pip install -r requirements.txt
+python ef_scrape.py              # Layer 1: official docs + whitepaper
+python ef_build_corpus.py        # Layer 2: repos → JSONL corpus
+python ef_import_site_db.py      # Import corpus → SQLite with FTS5
+python main.py                   # Start web atlas at http://localhost:3000
+```
+
+Then visit `http://localhost:3000` to search, browse topics, and explore records.
+
+## AI-Ready
+
+Point any LLM or agent at [`atlas.kodaxa.dev/llms.txt`](https://atlas.kodaxa.dev/llms.txt) for structured instructions on how to query the atlas, interpret authority tiers, and cite records with hashes. For programmatic access, use `/api/context/{topic}` to get compact, agent-consumable context bundles with top records, search suggestions, and export links.
 
 ## Overview
 
@@ -11,7 +31,7 @@ EF Builder Knowledge Atlas ingests official documentation, whitepapers, reposito
 The project has two parts:
 
 1. **Corpus builder** — Python scripts that scrape, clone, and assemble a local JSONL knowledge corpus from distributed sources.
-2. **Web atlas** — a FastAPI application (`atlas.kodaxa.dev`) that loads the corpus into SQLite with full-text search, provides a web UI for browsing and searching, and exposes a JSON API for programmatic access and AI context bundles.
+2. **Web atlas** — a FastAPI application ([atlas.kodaxa.dev](https://atlas.kodaxa.dev)) that loads the corpus into SQLite with full-text search, provides a web UI for browsing and searching, and exposes a JSON API for programmatic access and AI context bundles.
 
 ## Web Atlas
 
@@ -247,9 +267,9 @@ jinja2
 starlette>=0.40.0,<0.50.0
 ```
 
-## Re-running Safely
-
-- Re-running `python ef_build_corpus.py` overwrites `out/*` files.
-- Layer 2 uses shallow clones. If a repo directory exists but is incomplete, the builder removes it and re-clones.
-- `ef_import_site_db.py` deletes and rebuilds `site.db` from scratch.
-- Always run `python ef_validate_corpus.py` after building to confirm constraints.
+> [!WARNING]
+> **Re-running safely:**
+> - `ef_build_corpus.py` overwrites all `out/*` files.
+> - Layer 2 uses shallow clones — if a repo directory exists but is incomplete, it will be removed and re-cloned.
+> - `ef_import_site_db.py` **deletes and rebuilds `site.db` from scratch**. Running it again will erase the existing database.
+> - Always run `ef_validate_corpus.py` after building to confirm constraints.
