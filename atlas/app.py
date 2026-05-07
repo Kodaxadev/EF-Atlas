@@ -9,15 +9,13 @@ from pathlib import Path
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates
-from jinja2 import Environment, FileSystemLoader
 
 from . import db
 
 app = FastAPI(title="EF Builder Knowledge Atlas")
 
 BASE_DIR = Path(__file__).resolve().parent
-env = Environment(loader=FileSystemLoader(str(BASE_DIR / "templates")), autoescape=True, cache_size=0)
-templates = Jinja2Templates(env=env)
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
 @app.get("/", response_class=HTMLResponse)
