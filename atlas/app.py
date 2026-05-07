@@ -63,9 +63,10 @@ async def search_partial(
     category: str = Query(""),
     source: str = Query(""),
     limit: int = Query(50),
+    offset: int = Query(0),
 ):
     d = db.get_db()
-    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=limit)
+    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=limit, offset=offset)
     total = db.count_search(d, query=q, authority=authority, category=category, source=source)
     d.close()
     return templates.TemplateResponse(
@@ -74,6 +75,10 @@ async def search_partial(
             "request": request,
             "results": results,
             "total": total,
+            "q": q,
+            "authority": authority,
+            "category": category,
+            "source": source,
             "authority_colors": db.AUTHORITY_COLORS,
         },
     )
@@ -196,3 +201,17 @@ async def api_topic(topic_key: str):
     by_tier = db.get_topic_records(d, topic_key)
     d.close()
     return {"topic": topics[topic_key], "records_by_authority": by_tier}
+
+
+@app.get("/api/exports/jsonl")
+async def api_export_jsonl(q: str = Query(""), authority: str = Query(""), category: str = Query(""), source: str = Query("")):
+    from fastapi.responses import StreamingResponse
+    d = db.get_db()
+    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=10000)
+    d.close()
+
+    def stream():
+        for rec in results:
+            yield json.dumps(rec, ensure_ascii=False) + "\n"
+
+    return StreamingResponse(stream(), media_type="application/x-jsonl")

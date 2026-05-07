@@ -33,17 +33,30 @@ def ensure_repo_cloned(repo: RepoSpec, *, repos_dir: Path) -> Path:
     repos_dir.mkdir(parents=True, exist_ok=True)
     owner, name = repo.slug.split("/", 1)
     target = repos_dir / owner / name
-    if (target / ".git").exists():
-        return target
-
-    if target.exists():
-        # A previous run may have created the folder but failed mid-clone.
-        # Remove it so git can clone cleanly.
-        shutil.rmtree(target)
-
-    target.parent.mkdir(parents=True, exist_ok=True)
     url = f"https://github.com/{repo.slug}.git"
-    run_git(["clone", "--depth", "1", url, str(target)], cwd=repos_dir)
+
+    if not (target / ".git").exists():
+        if target.exists():
+            # A previous run may have created the folder but failed mid-clone.
+            # Remove it so git can clone cleanly.
+            shutil.rmtree(target)
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+        run_git(["clone", url, str(target)], cwd=repos_dir)
+
+    # If a PR branch is specified, fetch and checkout
+    if repo.pr_branch:
+        # Check if we're already on the PR branch
+        current = git_stdout(["rev-parse", "--abbrev-ref", "HEAD"], cwd=target)
+        if current != repo.pr_branch:
+            # Fetch the PR ref
+            pr_num = repo.pr_branch.replace("pr-", "").split("-")[0]
+            run_git(["fetch", "origin", f"pull/{pr_num}/head:{repo.pr_branch}"], cwd=target)
+        run_git(["checkout", repo.pr_branch], cwd=target)
+    else:
+        # Default: pull latest main
+        run_git(["pull", "--ff-only"], cwd=target)
+
     return target
 
 
@@ -206,7 +219,7 @@ def scrape_layer2_repos(*, repos_dir: Path) -> Tuple[List[Dict[str, Any]], Dict[
                         "slug_id": f"repo:{repo.slug}:{rel}",
                         "source": "repo",
                         "source_repo": repo.slug,
-                        "source_ref": "HEAD",
+                        "source_ref": repo.pr_branch if repo.pr_branch else "HEAD",
                         "source_commit": commit,
                         "authority_tier": repo.authority_tier,
                         "authority": authority_flags(repo.authority_tier),

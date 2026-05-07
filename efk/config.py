@@ -42,6 +42,7 @@ class RepoSpec:
     slug: str  # owner/repo
     authority_tier: str
     default_source_categories: tuple[str, ...]
+    pr_branch: str | None = None  # e.g. "pr-2-dapp-registry" for draft PR tracking
 
 
 LAYER2_REPOS = [
@@ -49,5 +50,11 @@ LAYER2_REPOS = [
     RepoSpec("evefrontier/builder-documentation", "official_docs", ("tooling", "indexing")),
     RepoSpec("evefrontier/builder-scaffold", "official_tooling", ("tooling", "dapp-kit")),
     RepoSpec("evefrontier/evevault", "official_tooling", ("wallet", "identity", "tooling")),
+    RepoSpec(
+        "evefrontier/dapp-index",
+        "official_tooling",
+        ("indexing", "discovery", "tooling"),
+        pr_branch="pr-2-dapp-registry",
+    ),
 ]
 

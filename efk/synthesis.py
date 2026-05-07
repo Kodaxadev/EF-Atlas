@@ -108,14 +108,16 @@ def generate_dapp_index_doc(records: List[Dict[str, Any]]) -> str:
 
     readme = _match(["readme"])
     builder_plan = _match(["builder_plan", "builder-plan"])
-    registry_pkg = _match(["registry/package", "registry/move.toml", "registry/move.lock"])
+    registry_pkg = _match(["registry-move/", "registry/move.toml", "registry/move.lock", "registry/sources", "registry/tests"])
+    registry_publish = _match(["move_publish", "move-publish"])
     metadata_model = _match(["metadata"])
     discussion = _match(["discussion", "watch", "notes"])
 
     parts = [header]
     parts.append(_section("README", [_record_link(r) for r in readme]))
     parts.append(_section("docs/BUILDER_PLAN", [_record_link(r) for r in builder_plan]))
-    parts.append(_section("Registry / Package Files", [_record_link(r) for r in registry_pkg]))
+    parts.append(_section("Registry / Package Files (registry-move/)", [_record_link(r) for r in registry_pkg]))
+    parts.append(_section("docs/MOVE_PUBLISH.md", [_record_link(r) for r in registry_publish]))
     parts.append(_section("Metadata Model Files", [_record_link(r) for r in metadata_model]))
     parts.append(_section("Discussion / Watch Notes", [_record_link(r) for r in discussion]))
 

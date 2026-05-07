@@ -1,13 +1,13 @@
 {% if total == 0 %}
 <p style="color: var(--text-dim);">No results found.</p>
 {% else %}
-<p style="color: var(--text-dim); font-size: 12px; margin-bottom: 8px;">{{ total }} results</p>
+<p style="color: var(--text-dim); font-size: 12px; margin-bottom: 8px;">{{ total }} results (showing {{ results|length }})</p>
 <table>
     <tr>
         <th>Title</th>
         <th>Authority</th>
         <th>Source</th>
-        <th>Hash</th>
+        <th>Snippet</th>
     </tr>
     {% for r in results %}
     <tr>
@@ -18,8 +18,17 @@
             {% endif %}
         </td>
         <td style="font-size:12px;color:var(--text-dim)">{{ r.source }}</td>
-        <td style="font-size:11px;color:var(--text-dim);font-family:monospace">{{ r.content_sha256[:8] if r.content_sha256 else '-' }}</td>
+        <td style="font-size:12px;color:var(--text-dim);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.snippet or '-' }}</td>
     </tr>
     {% endfor %}
 </table>
+{% if results|length >= 50 %}
+<div style="margin-top:12px;">
+    <button hx-get="/search/partial?q={{ q }}&authority={{ authority }}&category={{ category }}&source={{ source }}&limit=50&offset=50"
+            hx-target="#results" hx-swap="beforeend"
+            style="background:var(--bg2);color:var(--amber);border:1px solid var(--border);padding:6px 12px;cursor:pointer;border-radius:4px;">
+        Load more...
+    </button>
+</div>
+{% endif %}
 {% endif %}

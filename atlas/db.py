@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -27,14 +28,11 @@ def search(
     conditions = []
     params: list = []
 
-    if query.strip():
-        # FTS search
+    has_query = query.strip() != ""
+    if has_query:
         fts_query = query.strip().replace('"', '""')
         conditions.append("r.rowid IN (SELECT rowid FROM records_fts WHERE records_fts MATCH ?)")
         params.append(fts_query)
-    else:
-        # No query: just filter
-        pass
 
     if authority:
         conditions.append("r.authority_tier = ?")
@@ -47,6 +45,7 @@ def search(
         params.append(source)
 
     where = " AND ".join(conditions) if conditions else "1"
+
     sql = f"""
         SELECT r.*, 
                GROUP_CONCAT(DISTINCT rc.category) as categories
@@ -69,7 +68,36 @@ def search(
     params.extend([limit, offset])
 
     rows = db.execute(sql, params).fetchall()
-    return [dict(r) for r in rows]
+    results = [dict(r) for r in rows]
+
+    # Generate simple snippets from text for query results
+    if has_query and results:
+        keywords = query.strip().lower().split()
+        for rec in results:
+            text = rec.get("text", "") or ""
+            snippet = _extract_snippet(text, keywords)
+            rec["snippet"] = snippet
+
+    return results
+
+
+def _extract_snippet(text: str, keywords: list, window: int = 60) -> str:
+    if not text or not keywords:
+        return ""
+    low = text.lower()
+    for kw in keywords:
+        idx = low.find(kw)
+        if idx >= 0:
+            start = max(0, idx - window)
+            end = min(len(text), idx + len(kw) + window)
+            snippet = text[start:end].replace("\n", " ")
+            # Highlight keyword
+            pat = re.compile(re.escape(kw), re.I)
+            snippet = pat.sub(f"**{kw}**", snippet)
+            prefix = "..." if start > 0 else ""
+            suffix = "..." if end < len(text) else ""
+            return f"{prefix}{snippet}{suffix}"
+    return ""
 
 
 def count_search(
