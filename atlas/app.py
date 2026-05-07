@@ -15,7 +15,7 @@ from . import db
 app = FastAPI(title="EF Builder Knowledge Atlas")
 
 BASE_DIR = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
 
 
 @app.get("/", response_class=HTMLResponse)
