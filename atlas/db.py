@@ -7,7 +7,8 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-DB_PATH = Path("site.db")
+# Resolve DB_PATH relative to this module's location (works in any cwd, including Railway)
+DB_PATH = Path(__file__).resolve().parent.parent / "site.db"
 
 
 def get_db(path: Path = DB_PATH) -> sqlite3.Connection:
