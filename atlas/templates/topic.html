@@ -7,6 +7,9 @@
 <h2>
     <span class="badge" style="background:{{ authority_colors.get(tier, '#9E9E9E') }}">{{ tier }}</span>
     ({{ records|length }})
+    {% if tier == 'community_reference' %}
+    <span style="font-size:12px;color:#CE93D8;font-weight:normal">— Verify before relying on these claims</span>
+    {% endif %}
 </h2>
 <table>
     <tr>

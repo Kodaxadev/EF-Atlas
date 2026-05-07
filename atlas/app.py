@@ -139,6 +139,8 @@ Start here:
 - /api/topics/dapp-discovery
 - /api/topics/tooling
 - /api/topics/game-files
+- /api/topics/community-references
+- /api/topics/game-data
 
 Authority order:
 1. authoritative_source

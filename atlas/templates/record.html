@@ -3,6 +3,12 @@
 {% block content %}
 <h1>{{ rec.title or rec.id[:40] }}</h1>
 
+{% if rec.authority_tier == 'community_reference' %}
+<div style="background:rgba(156,39,176,0.12);border:1px solid #9C27B0;border-radius:6px;padding:8px 12px;margin-bottom:16px;font-size:13px;color:#CE93D8">
+    <strong>COMMUNITY REFERENCE</strong> — Verify before relying on this claim.
+</div>
+{% endif %}
+
 <div class="card">
     <table>
         <tr><th style="width:160px">ID</th><td style="font-family:monospace;font-size:12px">{{ rec.id }}</td></tr>

@@ -178,6 +178,8 @@ def get_topics() -> Dict[str, Dict[str, Any]]:
         "dapp-discovery": {"label": "dApp Discovery", "categories": ["discovery", "dapp-kit"]},
         "tooling": {"label": "Tooling", "categories": ["tooling"]},
         "game-files": {"label": "Game Files", "categories": ["config", "localization", "world_static_data", "data"]},
+        "community-references": {"label": "Community References", "categories": ["develop", "devsecops", "debugging", "getting-started", "links", "references"]},
+        "game-data": {"label": "Game Data", "categories": ["static-data", "game-data", "items", "world-data"]},
     }
 
 
@@ -263,6 +265,7 @@ CONTEXT_RULES = [
     "Cite record URLs and content_sha256 hashes when referencing facts.",
     "Do not treat community references as authoritative.",
     "Do not make downstream project recommendations unless given project context.",
+    "Community reference sources (Scetrov notes, EVE Datacore) are not sufficient for contract logic, official package IDs, or registry schema claims.",
 ]
 
 
