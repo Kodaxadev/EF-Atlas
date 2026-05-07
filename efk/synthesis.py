@@ -85,6 +85,43 @@ def generate_topic_doc(records: List[Dict[str, Any]], *, title: str, category_ke
     return "\n".join(parts).rstrip() + "\n"
 
 
+def generate_dapp_index_doc(records: List[Dict[str, Any]]) -> str:
+    header = "\n".join(
+        [
+            "# dapp-index Repo Synthesis",
+            "",
+            "Generated from the local corpus JSONL.",
+            "Covers only `evefrontier/dapp-index` files.",
+            "",
+        ]
+    )
+
+    repo_recs = [r for r in records if r.get("source_repo") == "evefrontier/dapp-index"]
+
+    def _match(keywords: List[str]) -> List[Dict[str, Any]]:
+        out: List[Dict[str, Any]] = []
+        for r in repo_recs:
+            p = (r.get("path") or "").lower()
+            if any(k in p for k in keywords):
+                out.append(r)
+        return out
+
+    readme = _match(["readme"])
+    builder_plan = _match(["builder_plan", "builder-plan"])
+    registry_pkg = _match(["registry/package", "registry/move.toml", "registry/move.lock"])
+    metadata_model = _match(["metadata"])
+    discussion = _match(["discussion", "watch", "notes"])
+
+    parts = [header]
+    parts.append(_section("README", [_record_link(r) for r in readme]))
+    parts.append(_section("docs/BUILDER_PLAN", [_record_link(r) for r in builder_plan]))
+    parts.append(_section("Registry / Package Files", [_record_link(r) for r in registry_pkg]))
+    parts.append(_section("Metadata Model Files", [_record_link(r) for r in metadata_model]))
+    parts.append(_section("Discussion / Watch Notes", [_record_link(r) for r in discussion]))
+
+    return "\n".join(parts).rstrip() + "\n"
+
+
 def write_synthesis(out_dir: Path, corpus_jsonl: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     records = load_jsonl(corpus_jsonl)
@@ -101,4 +138,5 @@ def write_synthesis(out_dir: Path, corpus_jsonl: Path) -> None:
         generate_topic_doc(records, title="dApp Discovery", category_key="discovery"),
     )
     write_md(out_dir / "tooling.md", generate_topic_doc(records, title="Tooling", category_key="tooling"))
+    write_md(out_dir / "dapp_index.md", generate_dapp_index_doc(records))
 
