@@ -140,7 +140,6 @@ Start here:
 - /api/topics/tooling
 - /api/topics/game-files
 - /api/topics/community-references
-- /api/topics/game-data
 
 Authority order:
 1. authoritative_source
