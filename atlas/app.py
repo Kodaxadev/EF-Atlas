@@ -154,6 +154,12 @@ Rules:
 - Cite record URLs and hashes.
 - Do not treat community references as authoritative.
 - Do not make downstream project recommendations unless given project context.
+
+When producing evidence tables, every row must include:
+title, URL, authority_tier, record ID, record_api_url, direct snippet.
+
+Do not include records that were not fetched through /api/records/{id}.
+Do not use placeholder phrases such as "surfaced in search" or "representative record."
 """
 
 

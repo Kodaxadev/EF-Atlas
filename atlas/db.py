@@ -290,6 +290,7 @@ def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[
                 "url": rec.get("url", ""),
                 "authority_tier": tier,
                 "source": rec.get("source", ""),
+                "categories": rec.get("categories", ""),
                 "content_sha256": rec.get("content_sha256", ""),
                 "path": rec.get("path", ""),
             })
