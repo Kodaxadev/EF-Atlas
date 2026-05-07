@@ -180,21 +180,27 @@ def check_context_bundle_records(base: str) -> list[str]:
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
-        print("Usage: python ef_validate_atlas.py http://127.0.0.1:8000")
-        return 1
+    import argparse
+    p = argparse.ArgumentParser(description="Validate EF Builder Knowledge Atlas.")
+    p.add_argument("base_url", help="Base URL, e.g. http://127.0.0.1:8000 or https://atlas.kodaxa.dev")
+    p.add_argument("--production", action="store_true", help="Skip local DB check (remote validation only)")
+    args = p.parse_args()
 
-    base = sys.argv[1].rstrip("/")
+    base = args.base_url.rstrip("/")
 
     print("=== EF Builder Knowledge Atlas Validation ===\n")
 
-    print("[1] Checking database...")
-    db_errors = check_db()
-    if db_errors:
-        for e in db_errors:
-            print(f"  ERROR: {e}")
-        print("\nDatabase checks FAILED. Run 'python ef_import_site_db.py' first.\n")
-        return 1
+    if not args.production:
+        print("[1] Checking database...")
+        db_errors = check_db()
+        if db_errors:
+            for e in db_errors:
+                print(f"  ERROR: {e}")
+            print("\nDatabase checks FAILED. Run 'python ef_import_site_db.py' first.\n")
+            return 1
+    else:
+        print("[1] Skipping local DB check (production mode)")
+        db_errors = []
 
     print("\n[2] Checking routes...")
     route_errors = check_routes(base)

@@ -1,10 +1,9 @@
 __pycache__/
 *.pyc
 *.pyo
-site.db
-out/
 sources/
 .vscode/
 ef_diff_corpus.py
 mutate.py
 out/test_*.jsonl
+out/game_files/
