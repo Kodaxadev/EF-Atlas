@@ -245,6 +245,8 @@ AUTHORITY_COLORS = {
     "unofficial": "#9E9E9E",
 }
 
+AUTHORITY_COLORS_TUPLE = tuple(AUTHORITY_COLORS.items())
+
 AUTHORITY_ORDER = [
     "authoritative_source",
     "official_docs",
