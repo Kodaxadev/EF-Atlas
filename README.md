@@ -4,7 +4,7 @@ A searchable, authority-tiered knowledge base for EVE Frontier builders — corp
 
 [![Live](https://img.shields.io/badge/live-atlas.kodaxa.dev-blue)](https://atlas.kodaxa.dev)
 [![Python 3.14](https://img.shields.io/badge/python-3.14-blue)](https://www.python.org/)
-[![Deployed on Railway](https://img.shields.io/badge/deployed%20on-railway-9333ea)](https://railway.app/)
+[![Deployed on Render](https://img.shields.io/badge/deployed%20on-render-black)](https://render.com/)
 
 ## Quickstart
 
@@ -248,7 +248,7 @@ python main.py
 
 Requires `site.db` in the project root (built via `ef_import_site_db.py`).
 
-### Railway Deployment
+### Render Deployment
 
 Deployed via Procfile:
 
@@ -256,7 +256,7 @@ Deployed via Procfile:
 web: python main.py
 ```
 
-Set `PORT` environment variable as needed (default: 3000). Ensure `site.db` is present or provisioned as a persistent volume.
+Set `PORT` environment variable as needed (default: 3000). Ensure `site.db` is present or provisioned as a persistent disk.
 
 ## Dependencies
 
