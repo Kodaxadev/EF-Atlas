@@ -8,7 +8,7 @@
         <div class="value">{{ total_records }}</div>
         <div class="label">Total Records</div>
     </div>
-    {% for tier, count in by_authority.items() %}
+    {% for tier, count in by_authority %}
     <div class="stat-card" style="border-color: {{ authority_colors.get(tier, '#9E9E9E') }}33">
         <div class="value" style="color: {{ authority_colors.get(tier, '#9E9E9E') }}">{{ count }}</div>
         <div class="label">{{ tier }}</div>
@@ -18,7 +18,7 @@
 
 <h2>By Source</h2>
 <div class="stats-grid">
-    {% for src, count in by_source.items() %}
+    {% for src, count in by_source %}
     <div class="stat-card">
         <div class="value">{{ count }}</div>
         <div class="label">{{ src }}</div>

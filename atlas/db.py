@@ -218,13 +218,13 @@ def get_topic_records(db: sqlite3.Connection, topic_key: str) -> Dict[str, List[
 def corpus_summary(db: sqlite3.Connection) -> Dict[str, Any]:
     total = db.execute("SELECT COUNT(*) FROM records").fetchone()[0]
 
-    by_authority = {}
+    by_authority = []
     for row in db.execute("SELECT authority_tier, COUNT(*) FROM records GROUP BY authority_tier ORDER BY COUNT(*) DESC").fetchall():
-        by_authority[row[0]] = row[1]
+        by_authority.append((row[0], row[1]))
 
-    by_source = {}
+    by_source = []
     for row in db.execute("SELECT source, COUNT(*) FROM records GROUP BY source ORDER BY COUNT(*) DESC").fetchall():
-        by_source[row[0]] = row[1]
+        by_source.append((row[0], row[1]))
 
     last_snapshot = db.execute("SELECT created_at FROM snapshots ORDER BY snapshot_id DESC LIMIT 1").fetchone()
 
