@@ -1,2 +1,6 @@
 deploy:
   startCommand: python main.py
+  env:
+    - name: PORT
+      value: "3000"
+
