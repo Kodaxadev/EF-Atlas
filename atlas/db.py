@@ -271,7 +271,6 @@ def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[
 
     topic = topics[topic_key]
     cats = topic["categories"]
-    placeholders = ",".join("?" for _ in cats)
 
     # Get top records per authority tier (limit 5 per tier)
     records_by_tier = get_topic_records(db, topic_key)
@@ -279,17 +278,24 @@ def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[
     for tier in AUTHORITY_ORDER:
         tier_records = records_by_tier.get(tier, [])
         for rec in tier_records[:5]:
+            rid = rec["id"]
+            # Verify the record is resolvable via /api/records/{id}
+            exists = db.execute("SELECT 1 FROM records WHERE id = ?", (rid,)).fetchone()
+            if not exists:
+                continue
             top_records.append({
-                "id": rec["id"],
+                "id": rid,
+                "record_api_url": f"/api/records/{rid}",
                 "title": rec.get("title", ""),
+                "url": rec.get("url", ""),
                 "authority_tier": tier,
                 "source": rec.get("source", ""),
-                "url": rec.get("url", ""),
                 "content_sha256": rec.get("content_sha256", ""),
                 "path": rec.get("path", ""),
             })
 
     # Search suggestions: common keywords from category names + headings
+    placeholders = ",".join("?" for _ in cats)
     headings_query = f"""
         SELECT DISTINCT rh.text
         FROM record_headings rh

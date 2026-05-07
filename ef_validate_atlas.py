@@ -120,6 +120,65 @@ def _is_json(text: str) -> bool:
         return False
 
 
+def check_context_bundle_records(base: str) -> list[str]:
+    """Verify every record in context bundles resolves via /api/records/{id}."""
+    errors = []
+
+    # Get all context bundle URLs
+    try:
+        resp = requests.get(urljoin(base, "/api/context-list"), timeout=5)
+        ctx_list = resp.json()
+    except Exception as e:
+        errors.append(f"  FAIL: /api/context-list — {e}")
+        return errors
+
+    topics = ctx_list.get("topics", [])
+    total_checked = 0
+    total_ok = 0
+
+    for topic in topics:
+        topic_key = topic["key"]
+        try:
+            resp = requests.get(urljoin(base, f"/api/context/{topic_key}"), timeout=5)
+            bundle = resp.json()
+        except Exception as e:
+            errors.append(f"  FAIL: /api/context/{topic_key} — {e}")
+            continue
+
+        records = bundle.get("top_records", [])
+        for rec in records:
+            rid = rec.get("id", "")
+            api_url = rec.get("record_api_url", "")
+            total_checked += 1
+
+            # Check record_api_url field exists
+            if not api_url:
+                errors.append(f"  FAIL: {topic_key}/{rid} — missing record_api_url")
+                continue
+
+            # Verify record resolves
+            try:
+                rec_resp = requests.get(urljoin(base, api_url), timeout=5)
+                if rec_resp.status_code == 200:
+                    rec_data = rec_resp.json()
+                    # Verify IDs match
+                    if rec_data.get("id") != rid:
+                        errors.append(
+                            f"  FAIL: {topic_key}/{rid} — /api/records returned id={rec_data.get('id')}"
+                        )
+                    else:
+                        total_ok += 1
+                else:
+                    errors.append(
+                        f"  FAIL: {topic_key}/{rid} — {api_url} returned {rec_resp.status_code}"
+                    )
+            except Exception as e:
+                errors.append(f"  FAIL: {topic_key}/{rid} — {api_url} — {e}")
+
+    print(f"  Context bundle records: {total_ok}/{total_checked} resolvable")
+    return errors
+
+
 def main() -> int:
     if len(sys.argv) < 2:
         print("Usage: python ef_validate_atlas.py http://127.0.0.1:8000")
@@ -140,11 +199,15 @@ def main() -> int:
     print("\n[2] Checking routes...")
     route_errors = check_routes(base)
 
+    print("\n[3] Checking context bundle record resolvability...")
+    context_errors = check_context_bundle_records(base)
+
+    all_errors = route_errors + context_errors
     print()
-    if route_errors:
-        for e in route_errors:
+    if all_errors:
+        for e in all_errors:
             print(e)
-        print(f"\n{len(route_errors)} route check(s) FAILED.\n")
+        print(f"\n{len(all_errors)} check(s) FAILED.\n")
         return 1
 
     print("All checks passed.\n")
