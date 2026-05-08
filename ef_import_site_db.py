@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS records (
     source_commit TEXT,
     source_ref TEXT,
     file_extension TEXT,
-    size_bytes INTEGER
+    size_bytes INTEGER,
+    permission_status TEXT
 );
 
 CREATE TABLE IF NOT EXISTS record_categories (
@@ -158,8 +159,9 @@ def insert_records(db: sqlite3.Connection, records: List[Dict[str, Any]]) -> int
             """INSERT INTO records
                (id, slug_id, source, authority_tier, url, path, title,
                 content_sha256, retrieved_at, text, raw_text,
-                source_repo, source_commit, source_ref, file_extension, size_bytes)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                source_repo, source_commit, source_ref, file_extension, size_bytes,
+                permission_status)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 rid,
                 rec.get("slug_id", ""),
@@ -177,6 +179,7 @@ def insert_records(db: sqlite3.Connection, records: List[Dict[str, Any]]) -> int
                 rec.get("source_ref", ""),
                 rec.get("file_extension", ""),
                 rec.get("size_bytes", 0),
+                rec.get("permission_status", ""),
             ),
         )
 

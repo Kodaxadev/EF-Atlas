@@ -54,6 +54,7 @@ def main() -> int:
         "source_ref": "",
         "file_extension": "html",
         "size_bytes": 0,
+        "permission_status": "publicly_accessible",
         "source_categories": ["static-data", "game-data", "items", "world-data", "tools", "explorers"],
         "headings": [],
         "outlinks": ["https://evedataco.re/"],
@@ -87,8 +88,9 @@ def main() -> int:
         """INSERT INTO records
            (id, slug_id, source, authority_tier, url, path, title,
             content_sha256, retrieved_at, text, raw_text,
-            source_repo, source_commit, source_ref, file_extension, size_bytes)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            source_repo, source_commit, source_ref, file_extension, size_bytes,
+            permission_status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             rid,
             rec["slug_id"],
@@ -106,6 +108,7 @@ def main() -> int:
             rec["source_ref"],
             rec["file_extension"],
             rec["size_bytes"],
+            rec["permission_status"],
         ),
     )
 

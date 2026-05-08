@@ -222,6 +222,7 @@ Creates `site.db` with FTS5 full-text search index, categories, headings, outlin
 ### Scetrov Community Notes
 
 Imports the Scetrov Frontier knowledge matrix CSV into `site.db` as `community_reference` tier.
+Source: `frontier_scetrov_live` | Permission: `openly_allowed_by_author`
 
 ```bash
 # Place CSV at ~/Downloads/frontier-site-knowledge-matrix.csv first

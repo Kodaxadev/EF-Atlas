@@ -79,11 +79,22 @@ def main() -> int:
             title = clean_title(row.get("title", ""))
             summary = row.get("summary", "").strip()
 
+            FIXED_CATEGORIES = [
+                "community-references",
+                "devsecops",
+                "tooling",
+                "world-api",
+                "static-data",
+                "smart-gates",
+                "move-security",
+            ]
+
             rec = {
                 "id": rid,
                 "slug_id": "",
-                "source": "scetrov_frontier_notes",
+                "source": "frontier_scetrov_live",
                 "authority_tier": "community_reference",
+                "permission_status": "openly_allowed_by_author",
                 "url": row.get("url", "").strip(),
                 "path": row.get("path", "").strip(),
                 "title": title,
@@ -91,12 +102,13 @@ def main() -> int:
                 "retrieved_at": "",
                 "text": summary,
                 "raw_text": summary,
-                "source_repo": "https://github.com/Scetrov/frontier.scetrov.live",
+                "source_repo": "https://frontier.scetrov.live",
                 "source_commit": "",
                 "source_ref": "",
                 "file_extension": "md",
                 "size_bytes": len(summary.encode()),
-                "source_categories": [section],
+                "source_categories": FIXED_CATEGORIES,
+                "section": section,
                 "headings": headings_to_struct(row.get("headings", "")),
                 "outlinks": parse_pipe_list(row.get("sample_external_links", "")),
             }
@@ -137,8 +149,9 @@ def main() -> int:
                 """INSERT INTO records
                    (id, slug_id, source, authority_tier, url, path, title,
                     content_sha256, retrieved_at, text, raw_text,
-                    source_repo, source_commit, source_ref, file_extension, size_bytes)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    source_repo, source_commit, source_ref, file_extension, size_bytes,
+                    permission_status)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     rid,
                     rec.get("slug_id", ""),
@@ -156,6 +169,7 @@ def main() -> int:
                     rec.get("source_ref", ""),
                     rec.get("file_extension", ""),
                     rec.get("size_bytes", 0),
+                    rec.get("permission_status", ""),
                 ),
             )
 
