@@ -358,6 +358,25 @@ AGENT_POLICY = {
     "community_rule": "Community references (Scetrov, EVE Datacore) are hints and discovery aids, not implementation truth. Do not base contract logic or official schema claims on them.",
     "dapp_ideation_rule": "When ideating dApps, ground proposals in current Sui Move capabilities, EVE Vault wallet/session patterns, World API endpoints, and official docs. Do not propose EVM-era patterns as current solutions.",
     "environment_rule": "Stillness = current live shard (testnet). Utopia = dev/mod/hackathon sandbox (testnet). Do not use Utopia as evidence for current Stillness player-shard truth unless explicitly comparing environments.",
+    "corpus_absence_rule": (
+        "If Atlas search returns no records, say 'not represented in the current Atlas corpus.' "
+        "Do not say 'does not exist' unless the task explicitly asks for external ecosystem "
+        "verification and the external search is cited. "
+        "Keep Atlas-backed claims separate from external-web claims. "
+        "Label external-web claims as External / needs verification unless supported by direct citations."
+    ),
+    "external_source_rule": (
+        "When using information from outside Atlas, clearly label it as External / needs verification. "
+        "Do not mix Atlas-backed facts with external-web claims. "
+        "Cite the external source URL or reference for every external claim."
+    ),
+    "authority_action_rule": (
+        "Before claiming a dapp can modify gates, permits, storage, escrow, access control, "
+        "treaty state, wallet sessions, smart assembly behavior, or any game mechanic, "
+        "identify the required signer, capability, authority object, extension authorization "
+        "path, API permission, or operator action. "
+        "If unknown, label the action as Unknown / needs verification."
+    ),
 }
 
 
@@ -420,4 +439,7 @@ def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[
         "environment_rule": AGENT_POLICY["environment_rule"],
         "claim_confidence_rule": AGENT_POLICY["claim_confidence_rule"],
         "enforcement_claim_rule": AGENT_POLICY["enforcement_claim_rule"],
+        "corpus_absence_rule": AGENT_POLICY["corpus_absence_rule"],
+        "external_source_rule": AGENT_POLICY["external_source_rule"],
+        "authority_action_rule": AGENT_POLICY["authority_action_rule"],
     }

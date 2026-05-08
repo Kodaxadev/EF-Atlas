@@ -207,6 +207,13 @@ Default task scope:
 - Legacy/EVM/MUD only for historical comparison when explicitly requested
 - Community references are hints/discovery, not implementation truth
 
+Corpus absence rule:
+- If Atlas search returns no records, say "not represented in the current Atlas corpus"
+- Do not say "does not exist" unless the task explicitly asks for external ecosystem verification and the external search is cited
+- Keep Atlas-backed claims separate from external-web claims
+- Label external-web claims as External / needs verification unless supported by direct citations
+- Before claiming a dapp can modify gates, permits, storage, escrow, access control, treaty state, wallet sessions, smart assembly behavior, or any game mechanic, identify the required signer, capability, authority object, extension authorization path, API permission, or operator action. If unknown, label as Unknown / needs verification
+
 Dapp ideation claim discipline:
 - Separate every claim into: Confirmed by Atlas, Inferred from Atlas, Assumption, Unknown/needs verification
 - Do not say "buildable today," "production-ready," "deployed," "auto-enforced," or "available" unless supported by inspected Atlas records
