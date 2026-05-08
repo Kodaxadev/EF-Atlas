@@ -23,8 +23,11 @@ class SourceSpec:
 AUTHORITY_TIERS = {
     "authoritative_source",
     "official_docs",
+    "official_api_docs",
     "official_tooling",
+    "external_foundation_docs",
     "community_reference",
+    "legacy_reference",
     "unofficial",
 }
 
