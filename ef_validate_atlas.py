@@ -181,10 +181,10 @@ def check_context_bundle_records(base: str) -> list[str]:
 
 
 def check_agent_policy(base: str) -> list[str]:
-    """Validate agent scope policy and claim discipline content."""
+    """Validate agent scope policy, claim discipline, and corpus absence content."""
     errors = []
 
-    # Check /llms.txt contains current_builder and Confirmed by Atlas
+    # Check /llms.txt contains current_builder, Confirmed by Atlas, and corpus absence text
     try:
         resp = requests.get(urljoin(base, "/llms.txt"), timeout=5)
         if "current_builder" not in resp.text:
@@ -195,12 +195,17 @@ def check_agent_policy(base: str) -> list[str]:
             errors.append("  FAIL: /llms.txt does not contain 'Confirmed by Atlas'")
         else:
             print("  OK: /llms.txt contains 'Confirmed by Atlas'")
+        if "not represented in the current Atlas corpus" not in resp.text:
+            errors.append("  FAIL: /llms.txt does not contain 'not represented in the current Atlas corpus'")
+        else:
+            print("  OK: /llms.txt contains corpus absence rule text")
     except Exception as e:
         errors.append(f"  FAIL: /llms.txt — {e}")
 
     # Check /api/agent-policy returns required keys
     required_keys = ["default_mode", "current_builder_scope", "forbidden_default_assumptions",
                      "claim_confidence_rule", "enforcement_claim_rule",
+                     "corpus_absence_rule", "external_source_rule", "authority_action_rule",
                      "legacy_rule", "community_rule", "dapp_ideation_rule", "environment_rule"]
     try:
         resp = requests.get(urljoin(base, "/api/agent-policy"), timeout=5)
@@ -213,16 +218,20 @@ def check_agent_policy(base: str) -> list[str]:
     except Exception as e:
         errors.append(f"  FAIL: /api/agent-policy — {e}")
 
-    # Check context bundles include scope_guidance and claim discipline rules
+    # Check context bundles include all rules
     for topic in ["smart-gates", "dapp-discovery"]:
         try:
             resp = requests.get(urljoin(base, f"/api/context/{topic}"), timeout=5)
             bundle = resp.json()
-            for key in ["default_mode", "scope_guidance", "claim_confidence_rule", "enforcement_claim_rule"]:
+            for key in ["default_mode", "scope_guidance", "claim_confidence_rule",
+                        "enforcement_claim_rule", "corpus_absence_rule",
+                        "external_source_rule", "authority_action_rule"]:
                 if key not in bundle:
                     errors.append(f"  FAIL: /api/context/{topic} missing '{key}'")
-            if all(k in bundle for k in ["default_mode", "scope_guidance", "claim_confidence_rule", "enforcement_claim_rule"]):
-                print(f"  OK: /api/context/{topic} includes default_mode, scope_guidance, and claim discipline rules")
+            if all(k in bundle for k in ["default_mode", "scope_guidance", "claim_confidence_rule",
+                                          "enforcement_claim_rule", "corpus_absence_rule",
+                                          "external_source_rule", "authority_action_rule"]):
+                print(f"  OK: /api/context/{topic} includes all policy rules")
         except Exception as e:
             errors.append(f"  FAIL: /api/context/{topic} — {e}")
 
