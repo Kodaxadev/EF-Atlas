@@ -7,3 +7,5 @@ ef_diff_corpus.py
 mutate.py
 out/test_*.jsonl
 out/game_files/
+site.db
+site.db-*
