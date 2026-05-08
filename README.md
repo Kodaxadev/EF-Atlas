@@ -237,6 +237,18 @@ Registers EVE Datacore (`evedataco.re`) as a community reference entry for game 
 python ef_import_eve_datacore.py
 ```
 
+### World API (Stillness + Utopia)
+
+Ingests EVE Frontier World API OpenAPI specs as structured endpoint records.
+Stillness records are classified as live production (mainnet, primary relevance).
+Utopia records are classified as active builder sandbox (testnet, sandbox-only relevance).
+
+```bash
+python ef_import_world_api.py              # ingest both Stillness and Utopia
+python ef_import_world_api.py --stillness-only
+python ef_import_world_api.py --utopia-only
+```
+
 ## Running the Web Atlas
 
 ### Local

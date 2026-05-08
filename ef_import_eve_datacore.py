@@ -89,8 +89,9 @@ def main() -> int:
            (id, slug_id, source, authority_tier, url, path, title,
             content_sha256, retrieved_at, text, raw_text,
             source_repo, source_commit, source_ref, file_extension, size_bytes,
-            permission_status)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            permission_status, environment, chain_environment, source_status,
+            production_relevance)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             rid,
             rec["slug_id"],
@@ -109,6 +110,10 @@ def main() -> int:
             rec["file_extension"],
             rec["size_bytes"],
             rec["permission_status"],
+            "n/a",
+            "n/a",
+            "community",
+            "reference",
         ),
     )
 

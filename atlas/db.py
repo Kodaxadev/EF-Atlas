@@ -58,10 +58,13 @@ def search(
             CASE r.authority_tier
                 WHEN 'authoritative_source' THEN 1
                 WHEN 'official_docs' THEN 2
-                WHEN 'official_tooling' THEN 3
-                WHEN 'installed_client_observation' THEN 4
-                WHEN 'community_reference' THEN 5
-                ELSE 6
+                WHEN 'official_api_docs' THEN 3
+                WHEN 'official_tooling' THEN 4
+                WHEN 'external_foundation_docs' THEN 5
+                WHEN 'installed_client_observation' THEN 6
+                WHEN 'community_reference' THEN 7
+                WHEN 'legacy_reference' THEN 8
+                ELSE 9
             END,
             r.title
         LIMIT ? OFFSET ?
@@ -178,8 +181,16 @@ def get_topics() -> Dict[str, Dict[str, Any]]:
         "dapp-discovery": {"label": "dApp Discovery", "categories": ["discovery", "dapp-kit"]},
         "tooling": {"label": "Tooling", "categories": ["tooling"]},
         "game-files": {"label": "Game Files", "categories": ["config", "localization", "world_static_data", "data"]},
-        "community-references": {"label": "Community References", "categories": ["develop", "devsecops", "debugging", "getting-started", "links", "references"]},
+        "community-references": {
+            "label": "Community References",
+            "categories": [
+                "develop", "devsecops", "debugging", "getting-started", "links", "references",
+                "community-references", "tooling", "world-api", "static-data",
+                "smart-gates", "move-security",
+            ],
+        },
         "game-data": {"label": "Game Data", "categories": ["static-data", "game-data", "items", "world-data"]},
+        "world-api": {"label": "World API", "categories": ["world-api", "rest", "openapi"]},
     }
 
 
@@ -200,10 +211,13 @@ def get_topic_records(db: sqlite3.Connection, topic_key: str) -> Dict[str, List[
                 CASE r.authority_tier
                     WHEN 'authoritative_source' THEN 1
                     WHEN 'official_docs' THEN 2
-                    WHEN 'official_tooling' THEN 3
-                    WHEN 'installed_client_observation' THEN 4
-                    WHEN 'community_reference' THEN 5
-                    ELSE 6
+                    WHEN 'official_api_docs' THEN 3
+                    WHEN 'official_tooling' THEN 4
+                    WHEN 'external_foundation_docs' THEN 5
+                    WHEN 'installed_client_observation' THEN 6
+                    WHEN 'community_reference' THEN 7
+                    WHEN 'legacy_reference' THEN 8
+                    ELSE 9
                 END""",
         cats,
     ).fetchall()
@@ -241,9 +255,12 @@ def corpus_summary(db: sqlite3.Connection) -> Dict[str, Any]:
 AUTHORITY_COLORS = {
     "authoritative_source": "#FFB800",
     "official_docs": "#4CAF50",
+    "official_api_docs": "#00BCD4",
     "official_tooling": "#2196F3",
+    "external_foundation_docs": "#8BC34A",
     "installed_client_observation": "#FF9800",
     "community_reference": "#9C27B0",
+    "legacy_reference": "#795548",
     "unofficial": "#9E9E9E",
 }
 
@@ -252,9 +269,12 @@ AUTHORITY_COLORS_TUPLE = tuple(AUTHORITY_COLORS.items())
 AUTHORITY_ORDER = [
     "authoritative_source",
     "official_docs",
+    "official_api_docs",
     "official_tooling",
+    "external_foundation_docs",
     "installed_client_observation",
     "community_reference",
+    "legacy_reference",
     "unofficial",
 ]
 
@@ -266,6 +286,13 @@ CONTEXT_RULES = [
     "Do not treat community references as authoritative.",
     "Do not make downstream project recommendations unless given project context.",
     "Community reference sources (Scetrov notes, EVE Datacore) are not sufficient for contract logic, official package IDs, or registry schema claims.",
+    "Stillness is the live production environment (mainnet). Utopia is the active builder sandbox (testnet).",
+    "Do not use Utopia as evidence for Stillness production behavior unless the task is explicitly about sandbox behavior or environment comparison.",
+    "Do not classify Utopia as old, dead, retired, or legacy. It is an active builder-focused sandbox.",
+    "Legacy reference sources (Project Awakening, MUD) are from the EVM-era architecture. Do not use them for current Sui/Move implementation decisions unless the task is explicitly a historical comparison.",
+    "External foundation docs (Sui, Walrus/Seal) provide foundational platform knowledge for Move, GraphQL, storage, and access control. They are not EVE Frontier-specific truth.",
+    "EVE Datacore is a community game/static data explorer. Use it for browsing static game data and item lookups. Do not use it as evidence for contract logic, official package IDs, or API behavior.",
+    "Do not use docs.evefrontier.com ?ask= or ?q= endpoints as a backend data source.",
 ]
 
 

@@ -150,8 +150,9 @@ def main() -> int:
                    (id, slug_id, source, authority_tier, url, path, title,
                     content_sha256, retrieved_at, text, raw_text,
                     source_repo, source_commit, source_ref, file_extension, size_bytes,
-                    permission_status)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    permission_status, environment, chain_environment, source_status,
+                    production_relevance)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     rid,
                     rec.get("slug_id", ""),
@@ -170,11 +171,20 @@ def main() -> int:
                     rec.get("file_extension", ""),
                     rec.get("size_bytes", 0),
                     rec.get("permission_status", ""),
+                    rec.get("environment", "n/a"),
+                    rec.get("chain_environment", "n/a"),
+                    rec.get("source_status", "community"),
+                    rec.get("production_relevance", "reference"),
                 ),
             )
 
             for cat in rec.get("source_categories", []):
                 db.execute("INSERT INTO record_categories (record_id, category) VALUES (?, ?)", (rid, cat))
+
+            # Add per-page section as an additional queryable category
+            section = rec.get("section", "")
+            if section:
+                db.execute("INSERT INTO record_categories (record_id, category) VALUES (?, ?)", (rid, section))
 
             for h in rec.get("headings", []):
                 db.execute(

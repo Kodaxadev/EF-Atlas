@@ -140,14 +140,19 @@ Start here:
 - /api/topics/tooling
 - /api/topics/game-files
 - /api/topics/community-references
+- /api/topics/game-data
+- /api/topics/world-api
 
 Authority order:
 1. authoritative_source
 2. official_docs
-3. official_tooling
-4. installed_client_observation
-5. community_reference
-6. unofficial
+3. official_api_docs
+4. official_tooling
+5. external_foundation_docs
+6. installed_client_observation
+7. community_reference
+8. legacy_reference
+9. unofficial
 
 Rules:
 - Treat indexes as navigation, not conclusions.
@@ -155,6 +160,13 @@ Rules:
 - Cite record URLs and hashes.
 - Do not treat community references as authoritative.
 - Do not make downstream project recommendations unless given project context.
+- Stillness is the live production environment (mainnet). Utopia is the active builder sandbox (testnet).
+- Do not use Utopia as evidence for Stillness production behavior unless the task is explicitly about sandbox behavior or environment comparison.
+- Do not classify Utopia as old, dead, retired, or legacy — it is an active builder-focused sandbox.
+- Legacy reference sources (Project Awakening, MUD) are from the EVM-era architecture. Do not use them for current Sui/Move implementation decisions unless the task is explicitly a historical comparison.
+- External foundation docs (Sui, Walrus/Seal) provide foundational platform knowledge. They are not EVE Frontier-specific truth.
+- EVE Datacore is a community game/static data explorer. Use it for browsing static game data and item lookups. Do not use it as evidence for contract logic, official package IDs, or API behavior.
+- Do not use docs.evefrontier.com ?ask= or ?q= endpoints as a backend data source.
 
 When producing evidence tables, every row must include:
 title, URL, authority_tier, record ID, record_api_url, direct snippet.

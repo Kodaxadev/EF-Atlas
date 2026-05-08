@@ -29,8 +29,11 @@ def authority_flags(authority_tier: str) -> Dict[str, bool]:
     tiers = {
         "authoritative_source",
         "official_docs",
+        "official_api_docs",
         "official_tooling",
+        "external_foundation_docs",
         "community_reference",
+        "legacy_reference",
         "unofficial",
     }
     if authority_tier not in tiers:
