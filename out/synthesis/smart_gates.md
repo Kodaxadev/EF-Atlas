@@ -113,7 +113,6 @@ Entries are grouped by authority tier and list URLs only.
 - config.ts (`repo://evefrontier/builder-scaffold/ts-scripts/utils/config.ts`)
 - constants.ts (`repo://evefrontier/builder-scaffold/ts-scripts/utils/constants.ts`)
 - helper.ts (`repo://evefrontier/builder-scaffold/ts-scripts/utils/helper.ts`)
-- EVE Vault Wallet (`repo://evefrontier/evevault/README.md`)
 - PopupApp.tsx (`repo://evefrontier/evevault/apps/extension/src/features/wallet/components/PopupApp.tsx`)
 - SignExecuteTransaction.tsx (`repo://evefrontier/evevault/apps/extension/src/features/wallet/components/SignExecuteTransaction.tsx`)
 - SignPersonalMessage.tsx (`repo://evefrontier/evevault/apps/extension/src/features/wallet/components/SignPersonalMessage.tsx`)
@@ -137,4 +136,5 @@ Entries are grouped by authority tier and list URLs only.
 - vaultService.ts (`repo://evefrontier/evevault/packages/shared/src/services/vaultService.ts`)
 - useSendToken.ts (`repo://evefrontier/evevault/packages/shared/src/wallet/hooks/useSendToken.ts`)
 - useTransactionHistory.ts (`repo://evefrontier/evevault/packages/shared/src/wallet/hooks/useTransactionHistory.ts`)
+- signForChain.test.ts (`repo://evefrontier/evevault/packages/shared/src/wallet/__tests__/signForChain.test.ts`)
 - EVE Frontier Dapp Index Builder Plan (`repo://evefrontier/dapp-index/docs/BUILDER_PLAN.md`)
