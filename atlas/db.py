@@ -25,6 +25,10 @@ def search(
     source: str = "",
     limit: int = 50,
     offset: int = 0,
+    environment: str = "",
+    chain_environment: str = "",
+    source_status: str = "",
+    production_relevance: str = "",
 ) -> List[Dict[str, Any]]:
     conditions = []
     params: list = []
@@ -44,6 +48,18 @@ def search(
     if source:
         conditions.append("r.source = ?")
         params.append(source)
+    if environment:
+        conditions.append("r.environment = ?")
+        params.append(environment)
+    if chain_environment:
+        conditions.append("r.chain_environment = ?")
+        params.append(chain_environment)
+    if source_status:
+        conditions.append("r.source_status = ?")
+        params.append(source_status)
+    if production_relevance:
+        conditions.append("r.production_relevance = ?")
+        params.append(production_relevance)
 
     where = " AND ".join(conditions) if conditions else "1"
 
@@ -110,6 +126,10 @@ def count_search(
     authority: str = "",
     category: str = "",
     source: str = "",
+    environment: str = "",
+    chain_environment: str = "",
+    source_status: str = "",
+    production_relevance: str = "",
 ) -> int:
     conditions = []
     params: list = []
@@ -127,6 +147,18 @@ def count_search(
     if source:
         conditions.append("r.source = ?")
         params.append(source)
+    if environment:
+        conditions.append("r.environment = ?")
+        params.append(environment)
+    if chain_environment:
+        conditions.append("r.chain_environment = ?")
+        params.append(chain_environment)
+    if source_status:
+        conditions.append("r.source_status = ?")
+        params.append(source_status)
+    if production_relevance:
+        conditions.append("r.production_relevance = ?")
+        params.append(production_relevance)
 
     where = " AND ".join(conditions) if conditions else "1"
     sql = f"SELECT COUNT(DISTINCT r.id) FROM records r WHERE {where}"
