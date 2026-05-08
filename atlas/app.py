@@ -33,11 +33,20 @@ async def search_page(
     authority: str = Query(""),
     category: str = Query(""),
     source: str = Query(""),
+    environment: str = Query(""),
+    chain_environment: str = Query(""),
+    source_status: str = Query(""),
+    production_relevance: str = Query(""),
     limit: int = Query(50),
 ):
     d = db.get_db()
-    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=limit)
-    total = db.count_search(d, query=q, authority=authority, category=category, source=source)
+    results = db.search(d, query=q, authority=authority, category=category, source=source,
+                        environment=environment, chain_environment=chain_environment,
+                        source_status=source_status, production_relevance=production_relevance,
+                        limit=limit)
+    total = db.count_search(d, query=q, authority=authority, category=category, source=source,
+                            environment=environment, chain_environment=chain_environment,
+                            source_status=source_status, production_relevance=production_relevance)
     d.close()
     return templates.TemplateResponse(
         "search.html",
@@ -47,6 +56,10 @@ async def search_page(
             "authority": authority,
             "category": category,
             "source": source,
+            "environment": environment,
+            "chain_environment": chain_environment,
+            "source_status": source_status,
+            "production_relevance": production_relevance,
             "results": results,
             "total": total,
             "limit": limit,
@@ -62,12 +75,21 @@ async def search_partial(
     authority: str = Query(""),
     category: str = Query(""),
     source: str = Query(""),
+    environment: str = Query(""),
+    chain_environment: str = Query(""),
+    source_status: str = Query(""),
+    production_relevance: str = Query(""),
     limit: int = Query(50),
     offset: int = Query(0),
 ):
     d = db.get_db()
-    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=limit, offset=offset)
-    total = db.count_search(d, query=q, authority=authority, category=category, source=source)
+    results = db.search(d, query=q, authority=authority, category=category, source=source,
+                        environment=environment, chain_environment=chain_environment,
+                        source_status=source_status, production_relevance=production_relevance,
+                        limit=limit, offset=offset)
+    total = db.count_search(d, query=q, authority=authority, category=category, source=source,
+                            environment=environment, chain_environment=chain_environment,
+                            source_status=source_status, production_relevance=production_relevance)
     d.close()
     return templates.TemplateResponse(
         "search_results_partial.html",
@@ -79,6 +101,10 @@ async def search_partial(
             "authority": authority,
             "category": category,
             "source": source,
+            "environment": environment,
+            "chain_environment": chain_environment,
+            "source_status": source_status,
+            "production_relevance": production_relevance,
             "authority_colors": db.AUTHORITY_COLORS,
         },
     )
@@ -167,6 +193,7 @@ Rules:
 - External foundation docs (Sui, Walrus/Seal) provide foundational platform knowledge. They are not EVE Frontier-specific truth.
 - EVE Datacore is a community game/static data explorer. Use it for browsing static game data and item lookups. Do not use it as evidence for contract logic, official package IDs, or API behavior.
 - Do not use docs.evefrontier.com ?ask= or ?q= endpoints as a backend data source.
+- For World API records, use /api/context/world-api or /api/topics/world-api, or filter by category=world-api, source=stillness_world_api, source=utopia_world_api, environment=stillness, or environment=utopia. Do not rely on text search for the term "world-api" because categories are stored separately from full-text content in the FTS index.
 
 When producing evidence tables, every row must include:
 title, URL, authority_tier, record ID, record_api_url, direct snippet.
@@ -192,11 +219,20 @@ async def api_search(
     authority: str = Query(""),
     category: str = Query(""),
     source: str = Query(""),
+    environment: str = Query(""),
+    chain_environment: str = Query(""),
+    source_status: str = Query(""),
+    production_relevance: str = Query(""),
     limit: int = Query(20),
 ):
     d = db.get_db()
-    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=limit)
-    total = db.count_search(d, query=q, authority=authority, category=category, source=source)
+    results = db.search(d, query=q, authority=authority, category=category, source=source,
+                        environment=environment, chain_environment=chain_environment,
+                        source_status=source_status, production_relevance=production_relevance,
+                        limit=limit)
+    total = db.count_search(d, query=q, authority=authority, category=category, source=source,
+                            environment=environment, chain_environment=chain_environment,
+                            source_status=source_status, production_relevance=production_relevance)
     d.close()
     return {"query": q, "total": total, "results": results}
 
@@ -223,10 +259,22 @@ async def api_topic(topic_key: str):
 
 
 @app.get("/api/exports/jsonl")
-async def api_export_jsonl(q: str = Query(""), authority: str = Query(""), category: str = Query(""), source: str = Query("")):
+async def api_export_jsonl(
+    q: str = Query(""),
+    authority: str = Query(""),
+    category: str = Query(""),
+    source: str = Query(""),
+    environment: str = Query(""),
+    chain_environment: str = Query(""),
+    source_status: str = Query(""),
+    production_relevance: str = Query(""),
+):
     from fastapi.responses import StreamingResponse
     d = db.get_db()
-    results = db.search(d, query=q, authority=authority, category=category, source=source, limit=10000)
+    results = db.search(d, query=q, authority=authority, category=category, source=source,
+                        environment=environment, chain_environment=chain_environment,
+                        source_status=source_status, production_relevance=production_relevance,
+                        limit=10000)
     d.close()
 
     def stream():
