@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-05-07T16:19:46.215750+00:00",
-  "ended_at": "2026-05-07T16:20:34.909171+00:00",
+  "started_at": "2026-05-08T16:15:03.157370+00:00",
+  "ended_at": "2026-05-08T16:16:11.975770+00:00",
   "records_written": 704,
   "failures": 0,
   "requested_urls_count": 63,
@@ -57,7 +57,7 @@
     "https://whitepaper.evefrontier.com/economy/pillars-of-the-frontier-economy.md"
   ],
   "proof_no_ask_or_q_requested": {
-    "checked_at": "2026-05-07T16:20:34.909185+00:00",
+    "checked_at": "2026-05-08T16:16:11.975797+00:00",
     "any_contains_ask": false,
     "any_contains_q": false,
     "any_contains_query_string": false

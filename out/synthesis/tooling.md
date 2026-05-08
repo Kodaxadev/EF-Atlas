@@ -325,6 +325,7 @@ Entries are grouped by authority tier and list URLs only.
 - SuiWallet.ts (`repo://evefrontier/evevault/apps/extension/src/lib/adapters/SuiWallet.ts`)
 - types.ts (`repo://evefrontier/evevault/apps/extension/src/lib/background/types.ts`)
 - authHandlers.ts (`repo://evefrontier/evevault/apps/extension/src/lib/background/handlers/authHandlers.ts`)
+- localnetDeviceStorage.ts (`repo://evefrontier/evevault/apps/extension/src/lib/background/handlers/localnetDeviceStorage.ts`)
 - localVaultHandlers.ts (`repo://evefrontier/evevault/apps/extension/src/lib/background/handlers/localVaultHandlers.ts`)
 - messageHandler.ts (`repo://evefrontier/evevault/apps/extension/src/lib/background/handlers/messageHandler.ts`)
 - portHandlers.ts (`repo://evefrontier/evevault/apps/extension/src/lib/background/handlers/portHandlers.ts`)
@@ -403,4 +404,3 @@ Entries are grouped by authority tier and list URLs only.
 - types.ts (`repo://evefrontier/evevault/packages/shared/src/auth/types.ts`)
 - userJwtSync.ts (`repo://evefrontier/evevault/packages/shared/src/auth/userJwtSync.ts`)
 - userToJwtResponse.ts (`repo://evefrontier/evevault/packages/shared/src/auth/userToJwtResponse.ts`)
-- vendToken.ts (`repo://evefrontier/evevault/packages/shared/src/auth/vendToken.ts`)
