@@ -42,6 +42,7 @@ ROUTES = [
     ("GET", "/api/context/package-versioning", 200, "Context bundle: package-versioning"),
     ("GET", "/api/context/identity", 200, "Context bundle: identity"),
     ("GET", "/api/context/dapp-discovery", 200, "Context bundle: dapp-discovery"),
+    ("GET", "/api/agent-policy", 200, "Agent policy endpoint"),
 ]
 
 
@@ -179,6 +180,50 @@ def check_context_bundle_records(base: str) -> list[str]:
     return errors
 
 
+def check_agent_policy(base: str) -> list[str]:
+    """Validate agent scope policy content."""
+    errors = []
+
+    # Check /llms.txt contains current_builder
+    try:
+        resp = requests.get(urljoin(base, "/llms.txt"), timeout=5)
+        if "current_builder" not in resp.text:
+            errors.append("  FAIL: /llms.txt does not contain 'current_builder'")
+        else:
+            print("  OK: /llms.txt contains 'current_builder'")
+    except Exception as e:
+        errors.append(f"  FAIL: /llms.txt — {e}")
+
+    # Check /api/agent-policy returns required keys
+    required_keys = ["default_mode", "current_builder_scope", "forbidden_default_assumptions",
+                     "legacy_rule", "community_rule", "dapp_ideation_rule", "environment_rule"]
+    try:
+        resp = requests.get(urljoin(base, "/api/agent-policy"), timeout=5)
+        policy = resp.json()
+        for key in required_keys:
+            if key not in policy:
+                errors.append(f"  FAIL: /api/agent-policy missing key '{key}'")
+        if not errors:
+            print(f"  OK: /api/agent-policy has all {len(required_keys)} required keys")
+    except Exception as e:
+        errors.append(f"  FAIL: /api/agent-policy — {e}")
+
+    # Check context bundles include scope_guidance
+    for topic in ["smart-gates", "dapp-discovery"]:
+        try:
+            resp = requests.get(urljoin(base, f"/api/context/{topic}"), timeout=5)
+            bundle = resp.json()
+            for key in ["default_mode", "scope_guidance"]:
+                if key not in bundle:
+                    errors.append(f"  FAIL: /api/context/{topic} missing '{key}'")
+            if "default_mode" in bundle and "scope_guidance" in bundle:
+                print(f"  OK: /api/context/{topic} includes default_mode and scope_guidance")
+        except Exception as e:
+            errors.append(f"  FAIL: /api/context/{topic} — {e}")
+
+    return errors
+
+
 def main() -> int:
     import argparse
     p = argparse.ArgumentParser(description="Validate EF Builder Knowledge Atlas.")
@@ -208,7 +253,10 @@ def main() -> int:
     print("\n[3] Checking context bundle record resolvability...")
     context_errors = check_context_bundle_records(base)
 
-    all_errors = route_errors + context_errors
+    print("\n[4] Checking agent scope policy content...")
+    policy_errors = check_agent_policy(base)
+
+    all_errors = route_errors + context_errors + policy_errors
     print()
     if all_errors:
         for e in all_errors:

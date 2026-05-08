@@ -327,6 +327,20 @@ CONTEXT_RULES = [
     "Do not use docs.evefrontier.com ?ask= or ?q= endpoints as a backend data source.",
 ]
 
+AGENT_POLICY = {
+    "default_mode": "current_builder",
+    "current_builder_scope": "Sui Move, Stillness (mainnet), Utopia (testnet sandbox), EVE Vault/dapp-kit, World API/OpenAPI",
+    "forbidden_default_assumptions": [
+        "Do not assume Solidity/EVM architecture for current Frontier work",
+        "Do not assume MUD tables/entities for current Frontier work",
+        "Do not assume Ethereum wallet/session patterns",
+    ],
+    "legacy_rule": "Legacy/EVM/MUD sources are for historical comparison only. Use only when the task explicitly requests historical comparison.",
+    "community_rule": "Community references (Scetrov, EVE Datacore) are hints and discovery aids, not implementation truth. Do not base contract logic or official schema claims on them.",
+    "dapp_ideation_rule": "When ideating dApps, ground proposals in current Sui Move capabilities, EVE Vault wallet/session patterns, World API endpoints, and official docs. Do not propose EVM-era patterns as current solutions.",
+    "environment_rule": "Stillness = live production (mainnet). Utopia = active builder sandbox (testnet). Do not use Utopia as evidence for Stillness production behavior unless explicitly comparing environments.",
+}
+
 
 def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[str, Any]]:
     """Return a compact agent-consumable context bundle for a topic."""
@@ -380,4 +394,9 @@ def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[
         "top_records": top_records,
         "search_suggestions": [h for h in headings if h and len(h) > 3],
         "export_url": f"/api/exports/jsonl?category={cats[0]}",
+        "default_mode": AGENT_POLICY["default_mode"],
+        "scope_guidance": AGENT_POLICY["current_builder_scope"],
+        "legacy_usage_rule": AGENT_POLICY["legacy_rule"],
+        "community_usage_rule": AGENT_POLICY["community_rule"],
+        "environment_rule": AGENT_POLICY["environment_rule"],
     }

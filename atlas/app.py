@@ -195,6 +195,17 @@ Rules:
 - Do not use docs.evefrontier.com ?ask= or ?q= endpoints as a backend data source.
 - For World API records, use /api/context/world-api or /api/topics/world-api, or filter by category=world-api, source=stillness_world_api, source=utopia_world_api, environment=stillness, or environment=utopia. Do not rely on text search for the term "world-api" because categories are stored separately from full-text content in the FTS index.
 
+Default task scope:
+- Default mode is current_builder
+- Current means Sui Move, not Solidity
+- Sui objects/events, not MUD tables
+- Stillness for live production/mainnet
+- Utopia for active builder sandbox (testnet)
+- EVE Vault / dapp-kit for wallet/session
+- World API/OpenAPI for REST evidence
+- Legacy/EVM/MUD only for historical comparison when explicitly requested
+- Community references are hints/discovery, not implementation truth
+
 When producing evidence tables, every row must include:
 title, URL, authority_tier, record ID, record_api_url, direct snippet.
 
@@ -223,6 +234,7 @@ async def api_search(
     chain_environment: str = Query(""),
     source_status: str = Query(""),
     production_relevance: str = Query(""),
+    mode: str = Query("current_builder"),
     limit: int = Query(20),
 ):
     d = db.get_db()
@@ -234,7 +246,13 @@ async def api_search(
                             environment=environment, chain_environment=chain_environment,
                             source_status=source_status, production_relevance=production_relevance)
     d.close()
-    return {"query": q, "total": total, "results": results}
+    return {
+        "query": q,
+        "total": total,
+        "results": results,
+        "mode": mode,
+        "mode_advisory": "Mode is advisory in this version. Use authority, source, category, and environment filters for precise retrieval.",
+    }
 
 
 @app.get("/api/records/{record_id:path}", response_class=JSONResponse)
@@ -304,4 +322,10 @@ async def api_context_list():
         ],
         "rules": db.CONTEXT_RULES,
         "authority_order": db.AUTHORITY_ORDER,
+        "agent_policy": db.AGENT_POLICY,
     }
+
+
+@app.get("/api/agent-policy", response_class=JSONResponse)
+async def api_agent_policy():
+    return db.AGENT_POLICY
