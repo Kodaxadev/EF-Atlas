@@ -269,7 +269,36 @@ Deployed via Procfile:
 web: python main.py
 ```
 
-Set `PORT` environment variable as needed (default: 3000). Ensure `site.db` is present or provisioned as a persistent disk.
+Set `PORT` environment variable as needed (default: 3000). `main.py` rebuilds `site.db` from scratch on every startup by running the full import pipeline.
+
+**Source regeneration:** The `sources/` directory is generated and gitignored. During deploy:
+- **Scetrov notes** are crawled from `frontier.scetrov.live/sitemap.xml` (~109 pages) via `ef_fetch_scetrov_notes.py`
+- **EVE Datacore** is generated in-memory as a single reference record
+- **World API** specs are fetched from Stillness and Utopia endpoints
+- **Watch notes** are loaded from `out/synthesis/watch_notes.md`
+
+**Expected production count:** ~852 records
+
+| Source | Count |
+|---|---|
+| repo (official docs + whitepapers) | ~643 |
+| frontier_scetrov_live | ~109 |
+| stillness_world_api | 16 |
+| utopia_world_api | 16 |
+| whitepaper | 25 |
+| docs | 36 |
+| game_files | 5 |
+| eve_datacore | 1 |
+| atlas_watch | 1 |
+
+**Smoke checks after deploy:**
+```bash
+curl https://atlas.kodaxa.dev/api/corpus-summary
+curl "https://atlas.kodaxa.dev/api/search?source=frontier_scetrov_live&limit=3"
+curl "https://atlas.kodaxa.dev/api/search?source=eve_datacore"
+curl "https://atlas.kodaxa.dev/api/search?source=stillness_world_api&limit=3"
+curl https://atlas.kodaxa.dev/api/agent-policy
+```
 
 ## Dependencies
 

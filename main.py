@@ -1,6 +1,7 @@
 """Startup script: rebuild site.db from all import layers, then start uvicorn."""
 
 import os
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -19,9 +20,24 @@ IMPORT_STEPS = [
 
 for label, cmd in IMPORT_STEPS:
     print(f"\n--- Running: {label} ---")
-    result = subprocess.run(cmd)
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.stdout:
+        print(result.stdout)
+    if result.stderr:
+        print(f"STDERR from {label}:\n{result.stderr}")
     if result.returncode != 0:
         print(f"WARNING: {label} exited with code {result.returncode}, continuing...")
+
+# --- Log source layer counts ---
+DB_PATH = Path("site.db")
+if DB_PATH.exists():
+    print("\n=== Source layer counts ===")
+    db = sqlite3.connect(str(DB_PATH))
+    for row in db.execute("SELECT source, COUNT(*) FROM records GROUP BY source ORDER BY source"):
+        print(f"  {row[0]}: {row[1]}")
+    total = db.execute("SELECT COUNT(*) FROM records").fetchone()[0]
+    print(f"  TOTAL: {total}")
+    db.close()
 
 # --- Start uvicorn ---
 port = int(os.environ.get("PORT", 3000))
