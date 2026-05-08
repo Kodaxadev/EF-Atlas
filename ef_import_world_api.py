@@ -29,10 +29,10 @@ ENVIRONMENTS = {
         "base_url": "https://world-api-stillness.live.tech.evefrontier.com",
         "source": "stillness_world_api",
         "environment": "stillness",
-        "chain_environment": "mainnet",
-        "source_status": "current_live",
-        "production_relevance": "primary",
-        "env_categories": ["live", "mainnet", "cycle-5"],
+        "chain_environment": "testnet",
+        "source_status": "current_live_shard",
+        "production_relevance": "primary_live_environment",
+        "env_categories": ["live", "current-shard", "player-facing", "cycle-5"],
     },
     "utopia": {
         "openapi_url": "https://world-api-utopia.uat.pub.evefrontier.com/docs/doc.json",
@@ -40,9 +40,9 @@ ENVIRONMENTS = {
         "source": "utopia_world_api",
         "environment": "utopia",
         "chain_environment": "testnet",
-        "source_status": "active_builder_sandbox",
+        "source_status": "dev_mod_hackathon_sandbox",
         "production_relevance": "sandbox_only",
-        "env_categories": ["sandbox", "testnet", "builder-testing", "hackathon"],
+        "env_categories": ["sandbox", "testnet", "builder-testing", "hackathon", "dev-mod"],
     },
 }
 
