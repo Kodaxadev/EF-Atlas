@@ -51,6 +51,18 @@ World API, and current Atlas records.
 </div>
 
 <div class="card">
+    <h2>Dapp Ideation Claim Discipline</h2>
+    <p>Copy this into your agent's prompt when ideating dApps:</p>
+    <pre>
+When proposing dApps, classify every claim as Confirmed by Atlas, Inferred from Atlas,
+Assumption, or Unknown/needs verification. Do not say "buildable today" or "production-ready"
+without citing inspected /api/records/{id} sources. For enforcement claims, specify the
+evidence type: on-chain, World API, indexed event, manual attestation, oracle, or speculative.
+Community records inspire ideas but cannot prove feasibility.
+    </pre>
+</div>
+
+<div class="card">
     <h2>Endpoints</h2>
     <table>
         <tr><th>Endpoint</th><th>Format</th><th>Description</th></tr>

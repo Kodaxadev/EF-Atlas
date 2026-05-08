@@ -330,16 +330,34 @@ CONTEXT_RULES = [
 
 AGENT_POLICY = {
     "default_mode": "current_builder",
-    "current_builder_scope": "Sui Move, Stillness (mainnet), Utopia (testnet sandbox), EVE Vault/dapp-kit, World API/OpenAPI",
+    "current_builder_scope": "Sui Move, Stillness (current live shard, testnet), Utopia (dev/mod/hackathon sandbox, testnet), EVE Vault/dapp-kit, World API/OpenAPI",
     "forbidden_default_assumptions": [
         "Do not assume Solidity/EVM architecture for current Frontier work",
         "Do not assume MUD tables/entities for current Frontier work",
         "Do not assume Ethereum wallet/session patterns",
     ],
+    "claim_confidence_rule": (
+        "When proposing dApps, separate every claim into: "
+        "Confirmed by Atlas (backed by inspected /api/records/{id}), "
+        "Inferred from Atlas (logical extension of Atlas records), "
+        "Assumption (unstated prerequisite), "
+        "Unknown/needs verification (cannot be proven from current corpus). "
+        "Do not say 'buildable today,' 'production-ready,' 'deployed,' 'auto-enforced,' "
+        "or 'available' unless supported by specific inspected Atlas records. "
+        "Community/reference records can inspire ideas but cannot prove implementation feasibility."
+    ),
+    "enforcement_claim_rule": (
+        "Before claiming something is enforced, automated, or guaranteed, specify the evidence type: "
+        "objective on-chain evidence, World API evidence, indexed event evidence, "
+        "manual attestation, oracle input, or speculative future integration. "
+        "Before making any technical feasibility claim, inspect the relevant "
+        "/api/records/{id} source and include the record ID, title, authority_tier, "
+        "record_api_url, and snippet."
+    ),
     "legacy_rule": "Legacy/EVM/MUD sources are for historical comparison only. Use only when the task explicitly requests historical comparison.",
     "community_rule": "Community references (Scetrov, EVE Datacore) are hints and discovery aids, not implementation truth. Do not base contract logic or official schema claims on them.",
     "dapp_ideation_rule": "When ideating dApps, ground proposals in current Sui Move capabilities, EVE Vault wallet/session patterns, World API endpoints, and official docs. Do not propose EVM-era patterns as current solutions.",
-    "environment_rule": "Stillness = live production (mainnet). Utopia = active builder sandbox (testnet). Do not use Utopia as evidence for Stillness production behavior unless explicitly comparing environments.",
+    "environment_rule": "Stillness = current live shard (testnet). Utopia = dev/mod/hackathon sandbox (testnet). Do not use Utopia as evidence for current Stillness player-shard truth unless explicitly comparing environments.",
 }
 
 
@@ -400,4 +418,6 @@ def get_context_bundle(db: sqlite3.Connection, topic_key: str) -> Optional[Dict[
         "legacy_usage_rule": AGENT_POLICY["legacy_rule"],
         "community_usage_rule": AGENT_POLICY["community_rule"],
         "environment_rule": AGENT_POLICY["environment_rule"],
+        "claim_confidence_rule": AGENT_POLICY["claim_confidence_rule"],
+        "enforcement_claim_rule": AGENT_POLICY["enforcement_claim_rule"],
     }

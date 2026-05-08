@@ -207,6 +207,13 @@ Default task scope:
 - Legacy/EVM/MUD only for historical comparison when explicitly requested
 - Community references are hints/discovery, not implementation truth
 
+Dapp ideation claim discipline:
+- Separate every claim into: Confirmed by Atlas, Inferred from Atlas, Assumption, Unknown/needs verification
+- Do not say "buildable today," "production-ready," "deployed," "auto-enforced," or "available" unless supported by inspected Atlas records
+- For enforcement claims, specify evidence type: objective on-chain evidence, World API evidence, indexed event evidence, manual attestation, oracle input, or speculative future integration
+- Community/reference records can inspire ideas but cannot prove implementation feasibility
+- Before making any technical feasibility claim, inspect the relevant /api/records/{id} source and include the record ID, title, authority_tier, record_api_url, and snippet
+
 When producing evidence tables, every row must include:
 title, URL, authority_tier, record ID, record_api_url, direct snippet.
 
